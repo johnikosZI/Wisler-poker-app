@@ -952,6 +952,9 @@
                 <button class="btn-primary" onclick="addPlayer(false)" id="buyInBtn">$25 Buy-In</button>
                 <button class="btn-cashout" onclick="addPlayer(true)" id="prepaidBtn">$25 Pre-Paid</button>
             </div>
+            <div id="editSettingsRow" style="margin-top: 12px;">
+                <button class="btn-secondary" onclick="editGameSettings()" id="editSettingsBtn">Edit Game Settings</button>
+            </div>
         </div>
 
         <div class="chip-calculator collapsed" id="chipCalculator">
@@ -1100,6 +1103,33 @@
             document.getElementById('addPlayerSection').style.display = 'block';
             document.getElementById('buyInBtn').textContent = `$${buyInAmount.toFixed(0)} Buy-In`;
             document.getElementById('prepaidBtn').textContent = `$${buyInAmount.toFixed(0)} Pre-Paid`;
+            updateEditSettingsVisibility();
+        }
+
+        function editGameSettings() {
+            // Only allow editing if no players have been added yet
+            if (players.length > 0) {
+                alert('Cannot edit game settings after players have been added.');
+                return;
+            }
+
+            // Show the game setup section, hide the add player section
+            document.getElementById('gameSetup').style.display = 'block';
+            document.getElementById('addPlayerSection').style.display = 'none';
+
+            // Populate with current values
+            document.getElementById('setupBuyIn').value = buyInAmount;
+            document.getElementById('setupRebuy').value = rebuyAmount;
+
+            gameStarted = false;
+            saveToLocalStorage();
+        }
+
+        function updateEditSettingsVisibility() {
+            const editRow = document.getElementById('editSettingsRow');
+            if (editRow) {
+                editRow.style.display = players.length === 0 ? 'block' : 'none';
+            }
         }
 
         function updateQuickCashoutPlayers() {
@@ -1277,6 +1307,8 @@
         function renderPlayers() {
             const container = document.getElementById('playersList');
             const endGameBtn = document.getElementById('endGameBtn');
+
+            updateEditSettingsVisibility();
 
             if (players.length === 0) {
                 container.innerHTML = `
@@ -1627,6 +1659,7 @@
                     document.getElementById('addPlayerSection').style.display = 'block';
                     document.getElementById('buyInBtn').textContent = `$${buyInAmount.toFixed(0)} Buy-In`;
                     document.getElementById('prepaidBtn').textContent = `$${buyInAmount.toFixed(0)} Pre-Paid`;
+                    updateEditSettingsVisibility();
                 }
             }
 

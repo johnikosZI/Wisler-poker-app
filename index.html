@@ -909,133 +909,292 @@
                 min-height: 48px;
             }
         }
+
+        /* Bottom Navigation Styles */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1a2320;
+            border-top: 1px solid #3d4a44;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            padding-bottom: calc(8px + env(safe-area-inset-bottom));
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            color: #5a6660;
+            text-decoration: none;
+            font-size: 0.7em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.15s ease;
+            border: none;
+            background: none;
+            min-width: 64px;
+        }
+
+        .nav-item:hover {
+            color: #7a8580;
+        }
+
+        .nav-item.active {
+            color: #e8e4dc;
+        }
+
+        .nav-item .nav-icon {
+            font-size: 1.8em;
+            margin-bottom: 4px;
+        }
+
+        .nav-item .nav-label {
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Tab content sections */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Add padding to container for bottom nav */
+        body {
+            padding-bottom: calc(70px + env(safe-area-inset-bottom));
+        }
+
+        /* Calculator tab - always show calculator expanded */
+        .tab-content.calculator-tab .chip-calculator {
+            background: transparent;
+            padding: 0;
+        }
+
+        .tab-content.calculator-tab .chip-calculator-header {
+            display: none;
+        }
+
+        .tab-content.calculator-tab .chip-calculator-content {
+            display: block !important;
+            margin-top: 0;
+        }
+
+        .tab-content.calculator-tab .chip-calculator.collapsed .chip-calculator-content {
+            display: block !important;
+        }
+
+        /* Settlement tab styling */
+        .tab-content.settle-tab .settlement-section {
+            display: block;
+            background: transparent;
+            padding: 0;
+            margin-bottom: 0;
+        }
+
+        .tab-content.settle-tab .settlement-section.active {
+            display: block;
+        }
+
+        /* History tab styling */
+        .tab-content.history-tab .history-section {
+            background: transparent;
+            padding: 0;
+        }
+
+        .tab-content.history-tab .history-section h2 {
+            margin-bottom: 16px;
+        }
+
+        .tab-content.history-tab .history-toggle {
+            display: none;
+        }
+
+        .tab-content.history-tab .history-list {
+            display: block;
+        }
+
+        /* Hide sections when in tabbed view */
+        .tabbed-view .chip-calculator,
+        .tabbed-view .settlement-section,
+        .tabbed-view .history-section {
+            display: none !important;
+        }
+
+        /* Badge for settlement tab */
+        .nav-item .nav-badge {
+            position: absolute;
+            top: 2px;
+            right: 8px;
+            background: #7cb97c;
+            color: #1c2420;
+            font-size: 0.65em;
+            padding: 2px 5px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .nav-item {
+            position: relative;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>WISLER TAKES ALL</h1>
-            <p class="tagline">Poker night tracker</p>
-            <div class="card-suits"><span class="black">♠</span> <span class="red">♥</span> <span class="black">♣</span> <span class="red">♦</span></div>
-        </header>
+    <div class="container tabbed-view">
+        <!-- GAME TAB -->
+        <div class="tab-content game-tab active" id="gameTab">
+            <header>
+                <h1>WISLER TAKES ALL</h1>
+                <p class="tagline">Poker night tracker</p>
+                <div class="card-suits"><span class="black">♠</span> <span class="red">♥</span> <span class="black">♣</span> <span class="red">♦</span></div>
+            </header>
 
-        <div class="stats-bar">
-            <div class="stat">
-                <div class="stat-value" id="totalPot">$0</div>
-                <div class="stat-label">The Pot</div>
+            <div class="stats-bar">
+                <div class="stat">
+                    <div class="stat-value" id="totalPot">$0</div>
+                    <div class="stat-label">The Pot</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="playerCount">0</div>
+                    <div class="stat-label">Players</div>
+                </div>
             </div>
-            <div class="stat">
-                <div class="stat-value" id="playerCount">0</div>
-                <div class="stat-label">Players</div>
+
+            <div class="add-player-section" id="gameSetup">
+                <h2>Game Setup</h2>
+                <div class="input-row">
+                    <div style="display: flex; flex-direction: column; gap: 5px; flex: 1;">
+                        <label style="color: #9ca3af; font-size: 12px;">Buy-In Amount</label>
+                        <input type="number" id="setupBuyIn" value="25" min="1" step="5" style="text-align: center;">
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 5px; flex: 1;">
+                        <label style="color: #9ca3af; font-size: 12px;">Rebuy Amount</label>
+                        <input type="number" id="setupRebuy" value="25" min="1" step="5" style="text-align: center;">
+                    </div>
+                    <button class="btn-primary" onclick="startGame()" style="align-self: flex-end;">Start Game</button>
+                </div>
+            </div>
+
+            <div class="add-player-section" id="addPlayerSection" style="display: none;">
+                <h2>Add Player</h2>
+                <div class="input-row">
+                    <input type="text" id="playerName" placeholder="Player Name" onkeypress="handleKeyPress(event)">
+                    <button class="btn-primary" onclick="addPlayer(false)" id="buyInBtn">$25 Buy-In</button>
+                    <button class="btn-cashout" onclick="addPlayer(true)" id="prepaidBtn">$25 Pre-Paid</button>
+                </div>
+                <div id="editSettingsRow" style="margin-top: 12px;">
+                    <button class="btn-secondary" onclick="editGameSettings()" id="editSettingsBtn">Edit Game Settings</button>
+                </div>
+            </div>
+
+            <div class="players-section">
+                <h2>Players</h2>
+                <div id="playersList">
+                    <div class="no-players">
+                        <div class="icon">🎰</div>
+                        <p>No players yet. Who's got the guts to sit at Wisler's table?</p>
+                    </div>
+                </div>
+                <button class="btn-primary btn-end-game" id="endGameBtn" onclick="showSettlementTab()" style="display: none;">
+                    End Game & Calculate Payouts
+                </button>
             </div>
         </div>
 
-        <div class="add-player-section" id="gameSetup">
-            <h2>Game Setup</h2>
-            <div class="input-row">
-                <div style="display: flex; flex-direction: column; gap: 5px; flex: 1;">
-                    <label style="color: #9ca3af; font-size: 12px;">Buy-In Amount</label>
-                    <input type="number" id="setupBuyIn" value="25" min="1" step="5" style="text-align: center;">
+        <!-- CALCULATOR TAB -->
+        <div class="tab-content calculator-tab" id="calculatorTab">
+            <header>
+                <h1>CHIP COUNTER</h1>
+                <p class="tagline">Count your chips</p>
+            </header>
+
+            <div class="chip-calculator" id="chipCalculatorTab">
+                <div class="chip-calculator-content">
+                    <div class="chip-grid">
+                        <div class="chip-item">
+                            <div class="chip-circle chip-white">10¢</div>
+                            <input type="number" id="chip-white-tab" placeholder="0" min="0" oninput="calculateChipsTab()">
+                            <span class="chip-value">White</span>
+                        </div>
+                        <div class="chip-item">
+                            <div class="chip-circle chip-red">50¢</div>
+                            <input type="number" id="chip-red-tab" placeholder="0" min="0" oninput="calculateChipsTab()">
+                            <span class="chip-value">Red</span>
+                        </div>
+                        <div class="chip-item">
+                            <div class="chip-circle chip-blue">$1</div>
+                            <input type="number" id="chip-blue-tab" placeholder="0" min="0" oninput="calculateChipsTab()">
+                            <span class="chip-value">Blue</span>
+                        </div>
+                        <div class="chip-item">
+                            <div class="chip-circle chip-green">$2</div>
+                            <input type="number" id="chip-green-tab" placeholder="0" min="0" oninput="calculateChipsTab()">
+                            <span class="chip-value">Green</span>
+                        </div>
+                        <div class="chip-item">
+                            <div class="chip-circle chip-black">$5</div>
+                            <input type="number" id="chip-black-tab" placeholder="0" min="0" oninput="calculateChipsTab()">
+                            <span class="chip-value">Black</span>
+                        </div>
+                    </div>
+                    <div class="calc-total">
+                        <span class="calc-total-label">Total Value</span>
+                        <span class="calc-total-value" id="chipTotalTab">$0.00</span>
+                    </div>
+                    <div class="calc-actions">
+                        <button class="btn-secondary" onclick="clearChipsTab()">Clear</button>
+                        <button class="btn-primary" onclick="copyChipTotalTab()">Copy Total</button>
+                    </div>
+                    <div class="quick-cashout" id="quickCashoutTab" style="display: none;">
+                        <select id="quickCashoutPlayerTab" class="player-select">
+                            <option value="">Select player...</option>
+                        </select>
+                        <button class="btn-cashout" onclick="applyQuickCashoutTab()">Cash Out Player</button>
+                    </div>
                 </div>
-                <div style="display: flex; flex-direction: column; gap: 5px; flex: 1;">
-                    <label style="color: #9ca3af; font-size: 12px;">Rebuy Amount</label>
-                    <input type="number" id="setupRebuy" value="25" min="1" step="5" style="text-align: center;">
-                </div>
-                <button class="btn-primary" onclick="startGame()" style="align-self: flex-end;">Start Game</button>
             </div>
         </div>
 
-        <div class="add-player-section" id="addPlayerSection" style="display: none;">
-            <h2>Add Player</h2>
-            <div class="input-row">
-                <input type="text" id="playerName" placeholder="Player Name" onkeypress="handleKeyPress(event)">
-                <button class="btn-primary" onclick="addPlayer(false)" id="buyInBtn">$25 Buy-In</button>
-                <button class="btn-cashout" onclick="addPlayer(true)" id="prepaidBtn">$25 Pre-Paid</button>
-            </div>
-            <div id="editSettingsRow" style="margin-top: 12px;">
-                <button class="btn-secondary" onclick="editGameSettings()" id="editSettingsBtn">Edit Game Settings</button>
+        <!-- SETTLE TAB -->
+        <div class="tab-content settle-tab" id="settleTab">
+            <header>
+                <h1>SETTLEMENT</h1>
+                <p class="tagline">Who owes who</p>
+            </header>
+
+            <div class="settlement-section active" id="settlementSection">
+                <div id="settlementList">
+                    <div class="no-players" id="noSettlementMessage">
+                        <p>No settlement yet. End the game when all players have cashed out.</p>
+                    </div>
+                </div>
+                <div class="settlement-actions" id="settlementActions" style="display: none;">
+                    <button class="btn-secondary" onclick="shareSettlement()">Share Results</button>
+                    <button class="btn-primary btn-reset" onclick="saveAndStartNewGame()">Save & Start New Game</button>
+                </div>
             </div>
         </div>
 
-        <div class="chip-calculator collapsed" id="chipCalculator">
-            <div class="chip-calculator-header" onclick="toggleChipCalculator()">
-                <h2>Chip Counter</h2>
-                <span class="chip-calculator-toggle">▼</span>
-            </div>
-            <div class="chip-calculator-content">
-            <div class="chip-grid">
-                <div class="chip-item">
-                    <div class="chip-circle chip-white">10¢</div>
-                    <input type="number" id="chip-white" placeholder="0" min="0" oninput="calculateChips()">
-                    <span class="chip-value">White</span>
-                </div>
-                <div class="chip-item">
-                    <div class="chip-circle chip-red">50¢</div>
-                    <input type="number" id="chip-red" placeholder="0" min="0" oninput="calculateChips()">
-                    <span class="chip-value">Red</span>
-                </div>
-                <div class="chip-item">
-                    <div class="chip-circle chip-blue">$1</div>
-                    <input type="number" id="chip-blue" placeholder="0" min="0" oninput="calculateChips()">
-                    <span class="chip-value">Blue</span>
-                </div>
-                <div class="chip-item">
-                    <div class="chip-circle chip-green">$2</div>
-                    <input type="number" id="chip-green" placeholder="0" min="0" oninput="calculateChips()">
-                    <span class="chip-value">Green</span>
-                </div>
-                <div class="chip-item">
-                    <div class="chip-circle chip-black">$5</div>
-                    <input type="number" id="chip-black" placeholder="0" min="0" oninput="calculateChips()">
-                    <span class="chip-value">Black</span>
-                </div>
-            </div>
-            <div class="calc-total">
-                <span class="calc-total-label">Total Value</span>
-                <span class="calc-total-value" id="chipTotal">$0.00</span>
-            </div>
-            <div class="calc-actions">
-                <button class="btn-secondary" onclick="clearChips()">Clear</button>
-                <button class="btn-primary" onclick="copyChipTotal()">Copy Total</button>
-            </div>
-            <div class="quick-cashout" id="quickCashout" style="display: none;">
-                <select id="quickCashoutPlayer" class="player-select">
-                    <option value="">Select player...</option>
-                </select>
-                <button class="btn-cashout" onclick="applyQuickCashout()">Cash Out Player</button>
-            </div>
-            </div>
-        </div>
+        <!-- HISTORY TAB -->
+        <div class="tab-content history-tab" id="historyTab">
+            <header>
+                <h1>HISTORY</h1>
+                <p class="tagline">Past games</p>
+            </header>
 
-        <div class="players-section">
-            <h2>Players</h2>
-            <div id="playersList">
-                <div class="no-players">
-                    <div class="icon">🎰</div>
-                    <p>No players yet. Who's got the guts to sit at Wisler's table?</p>
+            <div class="history-section">
+                <div class="history-list active" id="historyList">
+                    <div class="no-history">No saved games yet.</div>
                 </div>
-            </div>
-            <button class="btn-primary btn-end-game" id="endGameBtn" onclick="showSettlement()" style="display: none;">
-                End Game & Calculate Payouts
-            </button>
-        </div>
-
-        <div class="settlement-section" id="settlementSection">
-            <h2>Settlement</h2>
-            <div id="settlementList"></div>
-            <div class="settlement-actions">
-                <button class="btn-secondary" onclick="shareSettlement()">Share Results</button>
-                <button class="btn-primary btn-reset" onclick="saveAndStartNewGame()">Save & Start New Game</button>
-            </div>
-        </div>
-
-        <div class="history-section">
-            <h2>
-                Game History
-                <button class="history-toggle" onclick="toggleHistory()">Show/Hide</button>
-            </h2>
-            <div class="history-list" id="historyList">
-                <div class="no-history">No saved games yet.</div>
             </div>
         </div>
 
@@ -1044,15 +1203,158 @@
         </footer>
     </div>
 
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="switchTab('game')" id="navGame">
+            <span class="nav-icon">🎴</span>
+            <span class="nav-label">Game</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('calculator')" id="navCalculator">
+            <span class="nav-icon">🔢</span>
+            <span class="nav-label">Calculator</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('settle')" id="navSettle">
+            <span class="nav-icon">💰</span>
+            <span class="nav-label">Settle</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('history')" id="navHistory">
+            <span class="nav-icon">📋</span>
+            <span class="nav-label">History</span>
+        </button>
+    </nav>
+
     <script>
         let players = [];
         let gameHistory = [];
         let buyInAmount = 25;
         let rebuyAmount = 25;
         let gameStarted = false;
+        let currentTab = 'game';
+        let settlementCalculated = false;
 
         function generateId() {
             return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        // Tab Navigation Functions
+        function switchTab(tabName) {
+            currentTab = tabName;
+
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active from all nav items
+            document.querySelectorAll('.nav-item').forEach(nav => {
+                nav.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            document.getElementById('nav' + tabName.charAt(0).toUpperCase() + tabName.slice(1)).classList.add('active');
+
+            // Update calculator quick cashout when switching to calculator tab
+            if (tabName === 'calculator') {
+                updateQuickCashoutPlayersTab();
+            }
+
+            // Scroll to top when switching tabs
+            window.scrollTo(0, 0);
+        }
+
+        function showSettlementTab() {
+            const notCashedOut = players.filter(p => !p.cashedOut);
+            if (notCashedOut.length > 0) {
+                const names = notCashedOut.map(p => p.name).join(', ');
+                alert(`These players haven't cashed out yet: ${names}\n\nEnter their final chip counts first.`);
+                return;
+            }
+
+            calculateSettlement();
+            settlementCalculated = true;
+            document.getElementById('settlementActions').style.display = 'flex';
+            document.getElementById('noSettlementMessage').style.display = 'none';
+            switchTab('settle');
+        }
+
+        // Calculator Tab Functions (separate from any old calculator)
+        function calculateChipsTab() {
+            let totalCents = 0;
+            for (const [color, value] of Object.entries(CHIP_VALUES)) {
+                const count = parseInt(document.getElementById(`chip-${color}-tab`).value) || 0;
+                totalCents += count * value;
+            }
+            const totalDollars = totalCents / 100;
+            document.getElementById('chipTotalTab').textContent = `$${totalDollars.toFixed(2)}`;
+        }
+
+        function clearChipsTab() {
+            for (const color of Object.keys(CHIP_VALUES)) {
+                document.getElementById(`chip-${color}-tab`).value = '';
+            }
+            calculateChipsTab();
+        }
+
+        function copyChipTotalTab() {
+            const total = document.getElementById('chipTotalTab').textContent;
+            navigator.clipboard.writeText(total).then(() => {
+                alert(`Copied ${total} to clipboard!`);
+            }).catch(() => {
+                alert(`Total: ${total}`);
+            });
+        }
+
+        function updateQuickCashoutPlayersTab() {
+            const select = document.getElementById('quickCashoutPlayerTab');
+            const quickCashout = document.getElementById('quickCashoutTab');
+            const activePlayers = players.filter(p => !p.cashedOut);
+
+            if (activePlayers.length === 0) {
+                quickCashout.style.display = 'none';
+                return;
+            }
+
+            quickCashout.style.display = 'flex';
+            select.innerHTML = '<option value="">Select player...</option>' +
+                activePlayers.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+        }
+
+        function applyQuickCashoutTab() {
+            const select = document.getElementById('quickCashoutPlayerTab');
+            const playerId = select.value;
+            const total = document.getElementById('chipTotalTab').textContent;
+            const amount = parseFloat(total.replace('$', ''));
+
+            if (!playerId) {
+                alert('Select a player first.');
+                return;
+            }
+
+            if (isNaN(amount) || amount < 0) {
+                alert('Count some chips first.');
+                return;
+            }
+
+            const player = players.find(p => p.id === playerId);
+            if (player && confirm(`Cash out ${player.name} with ${total}?`)) {
+                player.finalChips = amount;
+                player.cashedOut = true;
+                clearChipsTab();
+                select.value = '';
+                renderPlayers();
+                updateStats();
+                updateQuickCashoutPlayersTab();
+                saveToLocalStorage();
+
+                // Check if all players are now cashed out
+                const allCashedOut = players.every(p => p.cashedOut);
+                if (allCashedOut && players.length > 0) {
+                    if (confirm('All players have cashed out! View settlement?')) {
+                        showSettlementTab();
+                    }
+                }
+            }
         }
 
         // Chip values in cents
@@ -1408,19 +1710,6 @@
             document.getElementById('playerCount').textContent = players.length;
         }
 
-        function showSettlement() {
-            const notCashedOut = players.filter(p => !p.cashedOut);
-            if (notCashedOut.length > 0) {
-                const names = notCashedOut.map(p => p.name).join(', ');
-                alert(`These players haven't cashed out yet: ${names}\n\nEnter their final chip counts first.`);
-                return;
-            }
-
-            calculateSettlement();
-            document.getElementById('settlementSection').classList.add('active');
-            document.getElementById('settlementSection').scrollIntoView({ behavior: 'smooth' });
-        }
-
         function calculateSettlement() {
             const container = document.getElementById('settlementList');
 
@@ -1611,17 +1900,27 @@
             if (confirm('Start a new game? This will clear all player data.')) {
                 players = [];
                 gameStarted = false;
+                settlementCalculated = false;
                 buyInAmount = 25;
                 rebuyAmount = 25;
                 localStorage.removeItem('wislerPokerPlayers');
                 localStorage.removeItem('wislerPokerSettings');
-                document.getElementById('settlementSection').classList.remove('active');
                 document.getElementById('gameSetup').style.display = 'block';
                 document.getElementById('addPlayerSection').style.display = 'none';
                 document.getElementById('setupBuyIn').value = 25;
                 document.getElementById('setupRebuy').value = 25;
+
+                // Reset settlement tab
+                document.getElementById('settlementList').innerHTML = `
+                    <div class="no-players" id="noSettlementMessage">
+                        <p>No settlement yet. End the game when all players have cashed out.</p>
+                    </div>
+                `;
+                document.getElementById('settlementActions').style.display = 'none';
+
                 renderPlayers();
                 updateStats();
+                switchTab('game');
             }
         }
 
@@ -1673,7 +1972,9 @@
                 const allCashedOut = players.length > 0 && players.every(p => p.cashedOut);
                 if (allCashedOut) {
                     calculateSettlement();
-                    document.getElementById('settlementSection').classList.add('active');
+                    settlementCalculated = true;
+                    document.getElementById('settlementActions').style.display = 'flex';
+                    document.getElementById('noSettlementMessage').style.display = 'none';
                 }
             }
         }
@@ -1713,18 +2014,30 @@
             // Reset current game
             players = [];
             gameStarted = false;
+            settlementCalculated = false;
             buyInAmount = 25;
             rebuyAmount = 25;
             localStorage.removeItem('wislerPokerPlayers');
             localStorage.removeItem('wislerPokerSettings');
-            document.getElementById('settlementSection').classList.remove('active');
             document.getElementById('gameSetup').style.display = 'block';
             document.getElementById('addPlayerSection').style.display = 'none';
             document.getElementById('setupBuyIn').value = 25;
             document.getElementById('setupRebuy').value = 25;
+
+            // Reset settlement tab
+            document.getElementById('settlementList').innerHTML = `
+                <div class="no-players" id="noSettlementMessage">
+                    <p>No settlement yet. End the game when all players have cashed out.</p>
+                </div>
+            `;
+            document.getElementById('settlementActions').style.display = 'none';
+
             renderPlayers();
             updateStats();
             renderHistory();
+
+            // Switch to game tab
+            switchTab('game');
 
             alert('Game saved! Starting fresh.');
         }

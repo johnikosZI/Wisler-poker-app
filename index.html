@@ -376,6 +376,117 @@
             padding: 15px;
         }
 
+        /* Chip Calculator Styles */
+        .chip-calculator {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .chip-calculator h2 {
+            color: #c9a227;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .chip-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .chip-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chip-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.75em;
+            border: 3px dashed rgba(0,0,0,0.3);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .chip-white {
+            background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+            color: #333;
+        }
+
+        .chip-red {
+            background: linear-gradient(135deg, #e53935, #b71c1c);
+            color: #fff;
+        }
+
+        .chip-blue {
+            background: linear-gradient(135deg, #1e88e5, #0d47a1);
+            color: #fff;
+        }
+
+        .chip-green {
+            background: linear-gradient(135deg, #43a047, #1b5e20);
+            color: #fff;
+        }
+
+        .chip-black {
+            background: linear-gradient(135deg, #424242, #212121);
+            color: #fff;
+        }
+
+        .chip-item input {
+            width: 60px;
+            text-align: center;
+            padding: 8px;
+            min-width: unset;
+            flex: unset;
+        }
+
+        .chip-item .chip-value {
+            font-size: 0.75em;
+            color: #888;
+        }
+
+        .calc-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(201, 162, 39, 0.1);
+            border: 2px solid #c9a227;
+            border-radius: 8px;
+        }
+
+        .calc-total-label {
+            font-size: 1.1em;
+            color: #888;
+        }
+
+        .calc-total-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #c9a227;
+        }
+
+        .calc-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .calc-actions button {
+            flex: 1;
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 15px;
@@ -528,6 +639,39 @@
                 padding: 20px 15px;
                 margin-top: 30px;
             }
+
+            .chip-calculator {
+                padding: 20px 15px;
+            }
+
+            .chip-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 8px;
+            }
+
+            .chip-circle {
+                width: 40px;
+                height: 40px;
+                font-size: 0.65em;
+            }
+
+            .chip-item input {
+                width: 50px;
+                padding: 6px;
+                font-size: 14px;
+            }
+
+            .chip-item .chip-value {
+                font-size: 0.65em;
+            }
+
+            .calc-total-value {
+                font-size: 1.6em;
+            }
+
+            .calc-actions {
+                flex-direction: column;
+            }
         }
 
         /* Extra small devices */
@@ -594,6 +738,45 @@
             </div>
         </div>
 
+        <div class="chip-calculator">
+            <h2>♦ Chip Counter</h2>
+            <div class="chip-grid">
+                <div class="chip-item">
+                    <div class="chip-circle chip-white">1¢</div>
+                    <input type="number" id="chip-white" value="0" min="0" oninput="calculateChips()">
+                    <span class="chip-value">White</span>
+                </div>
+                <div class="chip-item">
+                    <div class="chip-circle chip-red">5¢</div>
+                    <input type="number" id="chip-red" value="0" min="0" oninput="calculateChips()">
+                    <span class="chip-value">Red</span>
+                </div>
+                <div class="chip-item">
+                    <div class="chip-circle chip-blue">10¢</div>
+                    <input type="number" id="chip-blue" value="0" min="0" oninput="calculateChips()">
+                    <span class="chip-value">Blue</span>
+                </div>
+                <div class="chip-item">
+                    <div class="chip-circle chip-green">20¢</div>
+                    <input type="number" id="chip-green" value="0" min="0" oninput="calculateChips()">
+                    <span class="chip-value">Green</span>
+                </div>
+                <div class="chip-item">
+                    <div class="chip-circle chip-black">50¢</div>
+                    <input type="number" id="chip-black" value="0" min="0" oninput="calculateChips()">
+                    <span class="chip-value">Black</span>
+                </div>
+            </div>
+            <div class="calc-total">
+                <span class="calc-total-label">Total Value</span>
+                <span class="calc-total-value" id="chipTotal">$0.00</span>
+            </div>
+            <div class="calc-actions">
+                <button class="btn-secondary" onclick="clearChips()">Clear</button>
+                <button class="btn-primary" onclick="copyChipTotal()">Copy Total</button>
+            </div>
+        </div>
+
         <div class="players-section">
             <h2>♣ The Wisler's Den</h2>
             <div id="playersList">
@@ -627,6 +810,41 @@
         }
 
         const BUY_IN_AMOUNT = 25;
+
+        // Chip values in cents
+        const CHIP_VALUES = {
+            white: 1,
+            red: 5,
+            blue: 10,
+            green: 20,
+            black: 50
+        };
+
+        function calculateChips() {
+            let totalCents = 0;
+            for (const [color, value] of Object.entries(CHIP_VALUES)) {
+                const count = parseInt(document.getElementById(`chip-${color}`).value) || 0;
+                totalCents += count * value;
+            }
+            const totalDollars = totalCents / 100;
+            document.getElementById('chipTotal').textContent = `$${totalDollars.toFixed(2)}`;
+        }
+
+        function clearChips() {
+            for (const color of Object.keys(CHIP_VALUES)) {
+                document.getElementById(`chip-${color}`).value = 0;
+            }
+            calculateChips();
+        }
+
+        function copyChipTotal() {
+            const total = document.getElementById('chipTotal').textContent;
+            navigator.clipboard.writeText(total).then(() => {
+                alert(`Copied ${total} to clipboard!`);
+            }).catch(() => {
+                alert(`Total: ${total}`);
+            });
+        }
 
         function addPlayer() {
             const nameInput = document.getElementById('playerName');

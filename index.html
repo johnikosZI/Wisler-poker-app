@@ -257,6 +257,129 @@
             width: 100px;
         }
 
+        .cashout-input {
+            width: 100px;
+        }
+
+        .btn-cashout {
+            background: linear-gradient(135deg, #2d5a27, #1e3d1a);
+            color: #90EE90;
+            border: 1px solid #4a7c44;
+            padding: 8px 15px;
+            font-size: 0.9em;
+        }
+
+        .btn-cashout:hover {
+            background: linear-gradient(135deg, #3d6a37, #2d5a27);
+        }
+
+        .cashed-out {
+            border-color: #4a7c44 !important;
+            background: rgba(45, 90, 39, 0.2) !important;
+        }
+
+        .cashout-result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .cashout-winner {
+            background: rgba(45, 90, 39, 0.3);
+            color: #90EE90;
+        }
+
+        .cashout-loser {
+            background: rgba(139, 0, 0, 0.3);
+            color: #ff6b6b;
+        }
+
+        .cashout-even {
+            background: rgba(100, 100, 100, 0.3);
+            color: #aaa;
+        }
+
+        .settlement-section {
+            background: rgba(201, 162, 39, 0.1);
+            border: 2px solid #c9a227;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .settlement-section.active {
+            display: block;
+        }
+
+        .settlement-section h2 {
+            color: #c9a227;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .settlement-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .settlement-item .payer {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        .settlement-item .payee {
+            color: #90EE90;
+            font-weight: bold;
+        }
+
+        .settlement-item .amount {
+            color: #c9a227;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .settlement-arrow {
+            color: #888;
+            margin: 0 10px;
+        }
+
+        .btn-end-game {
+            background: linear-gradient(135deg, #8b0000, #5a0000);
+            color: #fff;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn-end-game:hover {
+            background: linear-gradient(135deg, #a50000, #8b0000);
+        }
+
+        .btn-reset {
+            background: #333;
+            color: #888;
+            border: 1px solid #555;
+            margin-top: 10px;
+        }
+
+        .btn-reset:hover {
+            background: #444;
+            color: #aaa;
+        }
+
+        .all-cashed-message {
+            text-align: center;
+            color: #90EE90;
+            font-size: 1.1em;
+            padding: 15px;
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 15px;
@@ -365,6 +488,50 @@
                 font-size: 1em;
             }
 
+            .cashout-input {
+                width: 100% !important;
+            }
+
+            .btn-cashout {
+                width: 100%;
+                padding: 12px 15px;
+            }
+
+            .cashout-result {
+                font-size: 0.95em;
+            }
+
+            .settlement-section {
+                padding: 20px 15px;
+            }
+
+            .settlement-item {
+                flex-wrap: wrap;
+                justify-content: center;
+                text-align: center;
+                gap: 5px;
+            }
+
+            .settlement-item .payer,
+            .settlement-item .payee {
+                width: 100%;
+            }
+
+            .settlement-item .amount {
+                font-size: 1.4em;
+                margin: 5px 0;
+            }
+
+            .settlement-arrow {
+                display: none;
+            }
+
+            .settlement-item::before {
+                content: '';
+                display: block;
+                width: 100%;
+            }
+
             footer {
                 padding: 20px 15px;
                 margin-top: 30px;
@@ -444,6 +611,15 @@
                     <p>No players yet. Who's got the guts to sit at Wisler's table?</p>
                 </div>
             </div>
+            <button class="btn-primary btn-end-game" id="endGameBtn" onclick="showSettlement()" style="display: none;">
+                End Game & Calculate Payouts
+            </button>
+        </div>
+
+        <div class="settlement-section" id="settlementSection">
+            <h2>♠ The Wisler Settlement</h2>
+            <div id="settlementList"></div>
+            <button class="btn-primary btn-reset" onclick="resetGame()">Start New Game</button>
         </div>
 
         <footer>
@@ -479,7 +655,9 @@
             players.push({
                 id: generateId(),
                 name: name,
-                buyIns: [amount]
+                buyIns: [amount],
+                finalChips: null,
+                cashedOut: false
             });
 
             nameInput.value = '';
@@ -501,9 +679,39 @@
             }
 
             const player = players.find(p => p.id === playerId);
-            if (player) {
+            if (player && !player.cashedOut) {
                 player.buyIns.push(amount);
                 input.value = '';
+                renderPlayers();
+                updateStats();
+                saveToLocalStorage();
+            }
+        }
+
+        function cashOut(playerId) {
+            const input = document.getElementById(`cashout-${playerId}`);
+            const amount = parseFloat(input.value);
+
+            if (isNaN(amount) || amount < 0) {
+                alert('Enter a valid chip count (0 or more).');
+                return;
+            }
+
+            const player = players.find(p => p.id === playerId);
+            if (player) {
+                player.finalChips = amount;
+                player.cashedOut = true;
+                renderPlayers();
+                updateStats();
+                saveToLocalStorage();
+            }
+        }
+
+        function undoCashOut(playerId) {
+            const player = players.find(p => p.id === playerId);
+            if (player) {
+                player.finalChips = null;
+                player.cashedOut = false;
                 renderPlayers();
                 updateStats();
                 saveToLocalStorage();
@@ -524,8 +732,14 @@
             return player.buyIns.reduce((sum, amount) => sum + amount, 0);
         }
 
+        function getPlayerProfit(player) {
+            if (player.finalChips === null) return null;
+            return player.finalChips - getPlayerTotal(player);
+        }
+
         function renderPlayers() {
             const container = document.getElementById('playersList');
+            const endGameBtn = document.getElementById('endGameBtn');
 
             if (players.length === 0) {
                 container.innerHTML = `
@@ -534,7 +748,20 @@
                         <p>No players yet. Who's got the guts to sit at Wisler's table?</p>
                     </div>
                 `;
+                endGameBtn.style.display = 'none';
                 return;
+            }
+
+            // Show end game button if there are players
+            endGameBtn.style.display = 'block';
+
+            // Check if all players have cashed out
+            const allCashedOut = players.every(p => p.cashedOut);
+            if (allCashedOut) {
+                endGameBtn.textContent = 'Show Final Settlement';
+            } else {
+                const cashedOutCount = players.filter(p => p.cashedOut).length;
+                endGameBtn.textContent = `End Game & Calculate Payouts (${cashedOutCount}/${players.length} cashed out)`;
             }
 
             container.innerHTML = players.map(player => {
@@ -543,20 +770,50 @@
                     `<span class="buy-in-chip">${index === 0 ? 'Initial' : 'Rebuy'}: $${amount.toFixed(2)}</span>`
                 ).join('');
 
+                let cashoutSection = '';
+                if (player.cashedOut) {
+                    const profit = getPlayerProfit(player);
+                    let resultClass = 'cashout-even';
+                    let resultText = 'Broke even';
+                    if (profit > 0) {
+                        resultClass = 'cashout-winner';
+                        resultText = `Won $${profit.toFixed(2)}`;
+                    } else if (profit < 0) {
+                        resultClass = 'cashout-loser';
+                        resultText = `Owes $${Math.abs(profit).toFixed(2)}`;
+                    }
+                    cashoutSection = `
+                        <div class="cashout-result ${resultClass}">
+                            Cashed out: $${player.finalChips.toFixed(2)} — ${resultText}
+                        </div>
+                        <div class="player-actions" style="margin-top: 10px;">
+                            <button class="btn-secondary" onclick="undoCashOut('${player.id}')">Undo Cash Out</button>
+                        </div>
+                    `;
+                } else {
+                    cashoutSection = `
+                        <div class="player-actions">
+                            <input type="number" id="rebuy-${player.id}" class="rebuy-input" placeholder="Rebuy $" onkeypress="handleRebuyKeyPress(event, '${player.id}')">
+                            <button class="btn-secondary" onclick="addRebuy('${player.id}')">Rebuy</button>
+                            <button class="btn-danger" onclick="removePlayer('${player.id}')">Remove</button>
+                        </div>
+                        <div class="player-actions" style="margin-top: 10px;">
+                            <input type="number" id="cashout-${player.id}" class="cashout-input" placeholder="Final chips $" onkeypress="handleCashoutKeyPress(event, '${player.id}')">
+                            <button class="btn-cashout" onclick="cashOut('${player.id}')">Cash Out</button>
+                        </div>
+                    `;
+                }
+
                 return `
-                    <div class="player-card">
+                    <div class="player-card ${player.cashedOut ? 'cashed-out' : ''}">
                         <div class="player-header">
                             <span class="player-name">♦ ${player.name}</span>
-                            <span class="player-total">$${total.toFixed(2)}</span>
+                            <span class="player-total">$${total.toFixed(2)} in</span>
                         </div>
                         <div class="buy-ins-list">
                             ${buyInsDisplay}
                         </div>
-                        <div class="player-actions">
-                            <input type="number" id="rebuy-${player.id}" class="rebuy-input" placeholder="Rebuy $" onkeypress="handleRebuyKeyPress(event, '${player.id}')">
-                            <button class="btn-secondary" onclick="addRebuy('${player.id}')">Add Rebuy</button>
-                            <button class="btn-danger" onclick="removePlayer('${player.id}')">Remove</button>
-                        </div>
+                        ${cashoutSection}
                     </div>
                 `;
             }).join('');
@@ -572,6 +829,99 @@
             document.getElementById('avgBuyIn').textContent = `$${avgBuyIn.toFixed(2)}`;
         }
 
+        function showSettlement() {
+            const notCashedOut = players.filter(p => !p.cashedOut);
+            if (notCashedOut.length > 0) {
+                const names = notCashedOut.map(p => p.name).join(', ');
+                alert(`These players haven't cashed out yet: ${names}\n\nEnter their final chip counts first.`);
+                return;
+            }
+
+            calculateSettlement();
+            document.getElementById('settlementSection').classList.add('active');
+            document.getElementById('settlementSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function calculateSettlement() {
+            const container = document.getElementById('settlementList');
+
+            // Calculate who owes and who is owed
+            const losers = []; // People who owe money
+            const winners = []; // People who are owed money
+
+            players.forEach(player => {
+                const profit = getPlayerProfit(player);
+                if (profit < 0) {
+                    losers.push({ name: player.name, amount: Math.abs(profit) });
+                } else if (profit > 0) {
+                    winners.push({ name: player.name, amount: profit });
+                }
+            });
+
+            // Sort by amount (highest first)
+            losers.sort((a, b) => b.amount - a.amount);
+            winners.sort((a, b) => b.amount - a.amount);
+
+            // Calculate simplified payments
+            const payments = [];
+            let loserIndex = 0;
+            let winnerIndex = 0;
+            let loserRemaining = losers.length > 0 ? losers[0].amount : 0;
+            let winnerRemaining = winners.length > 0 ? winners[0].amount : 0;
+
+            while (loserIndex < losers.length && winnerIndex < winners.length) {
+                const payAmount = Math.min(loserRemaining, winnerRemaining);
+
+                if (payAmount > 0.01) { // Ignore tiny amounts due to floating point
+                    payments.push({
+                        from: losers[loserIndex].name,
+                        to: winners[winnerIndex].name,
+                        amount: payAmount
+                    });
+                }
+
+                loserRemaining -= payAmount;
+                winnerRemaining -= payAmount;
+
+                if (loserRemaining < 0.01) {
+                    loserIndex++;
+                    loserRemaining = loserIndex < losers.length ? losers[loserIndex].amount : 0;
+                }
+                if (winnerRemaining < 0.01) {
+                    winnerIndex++;
+                    winnerRemaining = winnerIndex < winners.length ? winners[winnerIndex].amount : 0;
+                }
+            }
+
+            if (payments.length === 0) {
+                container.innerHTML = `
+                    <div class="all-cashed-message">
+                        Everyone broke even! No payments needed.
+                    </div>
+                `;
+            } else {
+                container.innerHTML = payments.map(payment => `
+                    <div class="settlement-item">
+                        <span class="payer">${payment.from}</span>
+                        <span class="settlement-arrow">pays →</span>
+                        <span class="amount">$${payment.amount.toFixed(2)}</span>
+                        <span class="settlement-arrow">→</span>
+                        <span class="payee">${payment.to}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function resetGame() {
+            if (confirm('Start a new game? This will clear all player data.')) {
+                players = [];
+                localStorage.removeItem('wislerPokerPlayers');
+                document.getElementById('settlementSection').classList.remove('active');
+                renderPlayers();
+                updateStats();
+            }
+        }
+
         function handleKeyPress(event) {
             if (event.key === 'Enter') {
                 addPlayer();
@@ -581,6 +931,12 @@
         function handleRebuyKeyPress(event, playerId) {
             if (event.key === 'Enter') {
                 addRebuy(playerId);
+            }
+        }
+
+        function handleCashoutKeyPress(event, playerId) {
+            if (event.key === 'Enter') {
+                cashOut(playerId);
             }
         }
 
@@ -594,6 +950,13 @@
                 players = JSON.parse(saved);
                 renderPlayers();
                 updateStats();
+
+                // Check if game was in settlement state
+                const allCashedOut = players.length > 0 && players.every(p => p.cashedOut);
+                if (allCashedOut) {
+                    calculateSettlement();
+                    document.getElementById('settlementSection').classList.add('active');
+                }
             }
         }
 

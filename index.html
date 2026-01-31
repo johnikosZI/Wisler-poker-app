@@ -1288,14 +1288,15 @@
                 let cashoutSection = '';
                 if (player.cashedOut) {
                     const profit = getPlayerProfit(player);
+                    const netPosition = profit + prepaid;
                     let resultClass = 'cashout-even';
                     let resultText = 'Broke even';
-                    if (profit > 0) {
+                    if (netPosition > 0) {
                         resultClass = 'cashout-winner';
-                        resultText = `Won $${profit.toFixed(2)}`;
-                    } else if (profit < 0) {
+                        resultText = `Won $${netPosition.toFixed(2)}`;
+                    } else if (netPosition < 0) {
                         resultClass = 'cashout-loser';
-                        resultText = `Owes $${Math.abs(profit).toFixed(2)}`;
+                        resultText = `Owes $${Math.abs(netPosition).toFixed(2)}`;
                     }
                     cashoutSection = `
                         <div class="cashout-result ${resultClass}">

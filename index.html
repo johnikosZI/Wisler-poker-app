@@ -221,6 +221,12 @@
             color: #c9a227;
         }
 
+        .buy-in-chip.prepaid {
+            background: #1e3d1a;
+            border-color: #4a7c44;
+            color: #90EE90;
+        }
+
         .player-actions {
             display: flex;
             gap: 10px;
@@ -734,7 +740,8 @@
             <h2>♠ Seat a New Player</h2>
             <div class="input-row">
                 <input type="text" id="playerName" placeholder="Player Name" onkeypress="handleKeyPress(event)">
-                <button class="btn-primary" onclick="addPlayer()">$25 Buy-In</button>
+                <button class="btn-primary" onclick="addPlayer(false)">$25 Buy-In</button>
+                <button class="btn-cashout" onclick="addPlayer(true)">$25 Pre-Paid</button>
             </div>
         </div>
 
@@ -846,7 +853,7 @@
             });
         }
 
-        function addPlayer() {
+        function addPlayer(isPrepaid = false) {
             const nameInput = document.getElementById('playerName');
             const name = nameInput.value.trim();
 
@@ -855,7 +862,8 @@
                 return;
             }
 
-            if (!confirm(`Add ${name} with a $${BUY_IN_AMOUNT} buy-in?`)) {
+            const prepaidText = isPrepaid ? ' (pre-paid)' : '';
+            if (!confirm(`Add ${name} with a $${BUY_IN_AMOUNT} buy-in${prepaidText}?`)) {
                 return;
             }
 
@@ -863,6 +871,7 @@
                 id: generateId(),
                 name: name,
                 buyIns: [BUY_IN_AMOUNT],
+                prepaid: isPrepaid ? BUY_IN_AMOUNT : 0,
                 finalChips: null,
                 cashedOut: false
             });
@@ -884,6 +893,20 @@
             }
 
             player.buyIns.push(BUY_IN_AMOUNT);
+            renderPlayers();
+            updateStats();
+            saveToLocalStorage();
+        }
+
+        function addPrepaid(playerId) {
+            const player = players.find(p => p.id === playerId);
+            if (!player || player.cashedOut) return;
+
+            if (!confirm(`Add $${BUY_IN_AMOUNT} pre-paid for ${player.name}?`)) {
+                return;
+            }
+
+            player.prepaid = (player.prepaid || 0) + BUY_IN_AMOUNT;
             renderPlayers();
             updateStats();
             saveToLocalStorage();
@@ -967,9 +990,13 @@
 
             container.innerHTML = players.map(player => {
                 const total = getPlayerTotal(player);
-                const buyInsDisplay = player.buyIns.map((amount, index) =>
+                const prepaid = player.prepaid || 0;
+                let buyInsDisplay = player.buyIns.map((amount, index) =>
                     `<span class="buy-in-chip">${index === 0 ? 'Initial' : 'Rebuy'}: $${amount.toFixed(2)}</span>`
                 ).join('');
+                if (prepaid > 0) {
+                    buyInsDisplay += `<span class="buy-in-chip prepaid">Pre-Paid: $${prepaid.toFixed(2)}</span>`;
+                }
 
                 let cashoutSection = '';
                 if (player.cashedOut) {
@@ -995,6 +1022,7 @@
                     cashoutSection = `
                         <div class="player-actions">
                             <button class="btn-secondary" onclick="addRebuy('${player.id}')">+$${BUY_IN_AMOUNT} Rebuy</button>
+                            <button class="btn-cashout" onclick="addPrepaid('${player.id}')">+$${BUY_IN_AMOUNT} Pre-Paid</button>
                             <button class="btn-danger" onclick="removePlayer('${player.id}')">Remove</button>
                         </div>
                         <div class="player-actions" style="margin-top: 10px;">
@@ -1051,10 +1079,14 @@
 
             players.forEach(player => {
                 const profit = getPlayerProfit(player);
-                if (profit < 0) {
-                    losers.push({ name: player.name, amount: Math.abs(profit) });
-                } else if (profit > 0) {
-                    winners.push({ name: player.name, amount: profit });
+                const prepaid = player.prepaid || 0;
+                // Net position accounts for prepaid: positive means owed money, negative means owes money
+                const netPosition = profit + prepaid;
+
+                if (netPosition < 0) {
+                    losers.push({ name: player.name, amount: Math.abs(netPosition) });
+                } else if (netPosition > 0) {
+                    winners.push({ name: player.name, amount: netPosition });
                 }
             });
 

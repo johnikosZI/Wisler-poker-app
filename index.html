@@ -742,27 +742,27 @@
             <h2>♦ Chip Counter</h2>
             <div class="chip-grid">
                 <div class="chip-item">
-                    <div class="chip-circle chip-white">1¢</div>
+                    <div class="chip-circle chip-white">10¢</div>
                     <input type="number" id="chip-white" placeholder="0" min="0" oninput="calculateChips()">
                     <span class="chip-value">White</span>
                 </div>
                 <div class="chip-item">
-                    <div class="chip-circle chip-red">5¢</div>
+                    <div class="chip-circle chip-red">50¢</div>
                     <input type="number" id="chip-red" placeholder="0" min="0" oninput="calculateChips()">
                     <span class="chip-value">Red</span>
                 </div>
                 <div class="chip-item">
-                    <div class="chip-circle chip-blue">10¢</div>
+                    <div class="chip-circle chip-blue">$1</div>
                     <input type="number" id="chip-blue" placeholder="0" min="0" oninput="calculateChips()">
                     <span class="chip-value">Blue</span>
                 </div>
                 <div class="chip-item">
-                    <div class="chip-circle chip-green">20¢</div>
+                    <div class="chip-circle chip-green">$2</div>
                     <input type="number" id="chip-green" placeholder="0" min="0" oninput="calculateChips()">
                     <span class="chip-value">Green</span>
                 </div>
                 <div class="chip-item">
-                    <div class="chip-circle chip-black">50¢</div>
+                    <div class="chip-circle chip-black">$5</div>
                     <input type="number" id="chip-black" placeholder="0" min="0" oninput="calculateChips()">
                     <span class="chip-value">Black</span>
                 </div>
@@ -813,11 +813,11 @@
 
         // Chip values in cents
         const CHIP_VALUES = {
-            white: 1,
-            red: 5,
-            blue: 10,
-            green: 20,
-            black: 50
+            white: 10,
+            red: 50,
+            blue: 100,
+            green: 200,
+            black: 500
         };
 
         function calculateChips() {

@@ -1278,9 +1278,12 @@
             container.innerHTML = players.map(player => {
                 const total = getPlayerTotal(player);
                 const prepaid = player.prepaid || 0;
-                let buyInsDisplay = player.buyIns.map((amount, index) =>
-                    `<span class="buy-in-chip">${index === 0 ? 'Initial' : 'Rebuy'}: $${amount.toFixed(2)}</span>`
-                ).join('');
+                const initialBuyIn = player.buyIns[0] || 0;
+                const totalRebuys = player.buyIns.slice(1).reduce((sum, amount) => sum + amount, 0);
+                let buyInsDisplay = `<span class="buy-in-chip">Initial: $${initialBuyIn.toFixed(2)}</span>`;
+                if (totalRebuys > 0) {
+                    buyInsDisplay += `<span class="buy-in-chip">Rebuy: $${totalRebuys.toFixed(2)}</span>`;
+                }
                 if (prepaid > 0) {
                     buyInsDisplay += `<span class="buy-in-chip prepaid">Pre-Paid: $${prepaid.toFixed(2)}</span>`;
                 }

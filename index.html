@@ -743,27 +743,27 @@
             <div class="chip-grid">
                 <div class="chip-item">
                     <div class="chip-circle chip-white">1¢</div>
-                    <input type="number" id="chip-white" value="0" min="0" oninput="calculateChips()">
+                    <input type="number" id="chip-white" placeholder="0" min="0" oninput="calculateChips()">
                     <span class="chip-value">White</span>
                 </div>
                 <div class="chip-item">
                     <div class="chip-circle chip-red">5¢</div>
-                    <input type="number" id="chip-red" value="0" min="0" oninput="calculateChips()">
+                    <input type="number" id="chip-red" placeholder="0" min="0" oninput="calculateChips()">
                     <span class="chip-value">Red</span>
                 </div>
                 <div class="chip-item">
                     <div class="chip-circle chip-blue">10¢</div>
-                    <input type="number" id="chip-blue" value="0" min="0" oninput="calculateChips()">
+                    <input type="number" id="chip-blue" placeholder="0" min="0" oninput="calculateChips()">
                     <span class="chip-value">Blue</span>
                 </div>
                 <div class="chip-item">
                     <div class="chip-circle chip-green">20¢</div>
-                    <input type="number" id="chip-green" value="0" min="0" oninput="calculateChips()">
+                    <input type="number" id="chip-green" placeholder="0" min="0" oninput="calculateChips()">
                     <span class="chip-value">Green</span>
                 </div>
                 <div class="chip-item">
                     <div class="chip-circle chip-black">50¢</div>
-                    <input type="number" id="chip-black" value="0" min="0" oninput="calculateChips()">
+                    <input type="number" id="chip-black" placeholder="0" min="0" oninput="calculateChips()">
                     <span class="chip-value">Black</span>
                 </div>
             </div>
@@ -832,7 +832,7 @@
 
         function clearChips() {
             for (const color of Object.keys(CHIP_VALUES)) {
-                document.getElementById(`chip-${color}`).value = 0;
+                document.getElementById(`chip-${color}`).value = '';
             }
             calculateChips();
         }

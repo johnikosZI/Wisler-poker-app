@@ -1158,13 +1158,16 @@
             }).join('');
 
             // Calculate who owes and who is owed
-            const losers = []; // People who owe money
+            const losers = []; // People who owe money (after accounting for their prepaid)
             const winners = []; // People who are owed money
+            let totalPrepaid = 0;
 
             players.forEach(player => {
                 const profit = getPlayerProfit(player);
                 const prepaid = player.prepaid || 0;
-                // Net position accounts for prepaid: positive means owed money, negative means owes money
+                totalPrepaid += prepaid;
+
+                // Net position: what this player actually owes/gets after prepaid
                 const netPosition = profit + prepaid;
 
                 if (netPosition < -0.01) {
@@ -1173,6 +1176,12 @@
                     winners.push({ name: player.name, amount: netPosition });
                 }
             });
+
+            // Add the bank (host) as a payer for prepaid amounts
+            // This represents the prepaid money you're holding that needs to go to winners
+            if (totalPrepaid > 0.01) {
+                losers.push({ name: '🏦 Bank (Pre-Paid)', amount: totalPrepaid });
+            }
 
             // Sort by amount (highest first)
             losers.sort((a, b) => b.amount - a.amount);

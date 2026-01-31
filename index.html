@@ -493,6 +493,61 @@
             flex: 1;
         }
 
+        .settlement-breakdown {
+            margin-bottom: 20px;
+        }
+
+        .settlement-breakdown h3 {
+            color: #c9a227;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 0.9em;
+        }
+
+        .breakdown-item .name {
+            color: #e8e8e8;
+        }
+
+        .breakdown-item .details {
+            color: #888;
+        }
+
+        .breakdown-item .net {
+            font-weight: bold;
+        }
+
+        .breakdown-item .net.owes {
+            color: #ff6b6b;
+        }
+
+        .breakdown-item .net.owed {
+            color: #90EE90;
+        }
+
+        .breakdown-item .net.even {
+            color: #888;
+        }
+
+        .settlement-divider {
+            border-top: 1px solid #444;
+            margin: 20px 0;
+        }
+
+        .settlement-section h3 {
+            color: #c9a227;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 15px;
@@ -1073,6 +1128,35 @@
         function calculateSettlement() {
             const container = document.getElementById('settlementList');
 
+            // Build breakdown for each player
+            const breakdownHtml = players.map(player => {
+                const buyIn = getPlayerTotal(player);
+                const finalChips = player.finalChips;
+                const profit = getPlayerProfit(player);
+                const prepaid = player.prepaid || 0;
+                const netPosition = profit + prepaid;
+
+                let netClass = 'even';
+                let netText = 'Square';
+                if (netPosition < -0.01) {
+                    netClass = 'owes';
+                    netText = `Owes $${Math.abs(netPosition).toFixed(2)}`;
+                } else if (netPosition > 0.01) {
+                    netClass = 'owed';
+                    netText = `Gets $${netPosition.toFixed(2)}`;
+                }
+
+                const prepaidNote = prepaid > 0 ? `, Pre-paid: $${prepaid.toFixed(2)}` : '';
+
+                return `
+                    <div class="breakdown-item">
+                        <span class="name">${player.name}</span>
+                        <span class="details">In: $${buyIn.toFixed(2)}, Out: $${finalChips.toFixed(2)}${prepaidNote}</span>
+                        <span class="net ${netClass}">${netText}</span>
+                    </div>
+                `;
+            }).join('');
+
             // Calculate who owes and who is owed
             const losers = []; // People who owe money
             const winners = []; // People who are owed money
@@ -1083,9 +1167,9 @@
                 // Net position accounts for prepaid: positive means owed money, negative means owes money
                 const netPosition = profit + prepaid;
 
-                if (netPosition < 0) {
+                if (netPosition < -0.01) {
                     losers.push({ name: player.name, amount: Math.abs(netPosition) });
-                } else if (netPosition > 0) {
+                } else if (netPosition > 0.01) {
                     winners.push({ name: player.name, amount: netPosition });
                 }
             });
@@ -1125,14 +1209,15 @@
                 }
             }
 
+            let paymentsHtml = '';
             if (payments.length === 0) {
-                container.innerHTML = `
+                paymentsHtml = `
                     <div class="all-cashed-message">
                         Everyone broke even! No payments needed.
                     </div>
                 `;
             } else {
-                container.innerHTML = payments.map(payment => `
+                paymentsHtml = payments.map(payment => `
                     <div class="settlement-item">
                         <span class="payer">${payment.from}</span>
                         <span class="settlement-arrow">pays →</span>
@@ -1142,6 +1227,16 @@
                     </div>
                 `).join('');
             }
+
+            container.innerHTML = `
+                <div class="settlement-breakdown">
+                    <h3>Player Summary</h3>
+                    ${breakdownHtml}
+                </div>
+                <div class="settlement-divider"></div>
+                <h3>Payments</h3>
+                ${paymentsHtml}
+            `;
         }
 
         function resetGame() {

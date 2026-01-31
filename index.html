@@ -47,7 +47,14 @@
         .card-suits {
             font-size: 1.2em;
             margin-top: 8px;
+        }
+
+        .card-suits .black {
             color: #5a6660;
+        }
+
+        .card-suits .red {
+            color: #c44;
         }
 
         .stats-bar {
@@ -164,6 +171,25 @@
         .btn-danger:hover {
             background: #5a3535;
             border-color: #7a5050;
+        }
+
+        .btn-danger-confirm {
+            background: #6a2020;
+            border-color: #8a3030;
+            color: #fff;
+            padding: 10px 16px;
+            font-size: 0.9em;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .btn-danger-confirm:hover {
+            background: #8a2020;
+            border-color: #aa4040;
         }
 
         .players-section h2 {
@@ -382,11 +408,36 @@
             margin-bottom: 24px;
         }
 
+        .chip-calculator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
         .chip-calculator h2 {
             color: #e8e4dc;
-            margin-bottom: 16px;
             font-size: 1.1em;
             font-weight: 500;
+            margin: 0;
+        }
+
+        .chip-calculator-toggle {
+            color: #5a6660;
+            font-size: 1.2em;
+            transition: transform 0.2s;
+        }
+
+        .chip-calculator.collapsed .chip-calculator-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .chip-calculator-content {
+            margin-top: 16px;
+        }
+
+        .chip-calculator.collapsed .chip-calculator-content {
+            display: none;
         }
 
         .chip-grid {
@@ -482,6 +533,30 @@
             flex: 1;
         }
 
+        .quick-cashout {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #3d4a44;
+        }
+
+        .player-select {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #3d4a44;
+            border-radius: 6px;
+            background: #1c2420;
+            color: #e8e4dc;
+            font-size: 0.9em;
+            font-family: inherit;
+        }
+
+        .player-select:focus {
+            outline: none;
+            border-color: #5a6660;
+        }
+
         .settlement-breakdown {
             margin-bottom: 16px;
         }
@@ -541,6 +616,16 @@
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+        }
+
+        .settlement-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .settlement-actions button {
+            flex: 1;
         }
 
         /* History Section */
@@ -831,7 +916,7 @@
         <header>
             <h1>WISLER TAKES ALL</h1>
             <p class="tagline">Poker night tracker</p>
-            <div class="card-suits">♠ ♥ ♣ ♦</div>
+            <div class="card-suits"><span class="black">♠</span> <span class="red">♥</span> <span class="black">♣</span> <span class="red">♦</span></div>
         </header>
 
         <div class="stats-bar">
@@ -854,8 +939,12 @@
             </div>
         </div>
 
-        <div class="chip-calculator">
-            <h2>Chip Counter</h2>
+        <div class="chip-calculator collapsed" id="chipCalculator">
+            <div class="chip-calculator-header" onclick="toggleChipCalculator()">
+                <h2>Chip Counter</h2>
+                <span class="chip-calculator-toggle">▼</span>
+            </div>
+            <div class="chip-calculator-content">
             <div class="chip-grid">
                 <div class="chip-item">
                     <div class="chip-circle chip-white">10¢</div>
@@ -891,6 +980,13 @@
                 <button class="btn-secondary" onclick="clearChips()">Clear</button>
                 <button class="btn-primary" onclick="copyChipTotal()">Copy Total</button>
             </div>
+            <div class="quick-cashout" id="quickCashout" style="display: none;">
+                <select id="quickCashoutPlayer" class="player-select">
+                    <option value="">Select player...</option>
+                </select>
+                <button class="btn-cashout" onclick="applyQuickCashout()">Cash Out Player</button>
+            </div>
+            </div>
         </div>
 
         <div class="players-section">
@@ -909,7 +1005,10 @@
         <div class="settlement-section" id="settlementSection">
             <h2>Settlement</h2>
             <div id="settlementList"></div>
-            <button class="btn-primary btn-reset" onclick="saveAndStartNewGame()">Save & Start New Game</button>
+            <div class="settlement-actions">
+                <button class="btn-secondary" onclick="shareSettlement()">Share Results</button>
+                <button class="btn-primary btn-reset" onclick="saveAndStartNewGame()">Save & Start New Game</button>
+            </div>
         </div>
 
         <div class="history-section">
@@ -970,6 +1069,54 @@
             }).catch(() => {
                 alert(`Total: ${total}`);
             });
+        }
+
+        function toggleChipCalculator() {
+            document.getElementById('chipCalculator').classList.toggle('collapsed');
+        }
+
+        function updateQuickCashoutPlayers() {
+            const select = document.getElementById('quickCashoutPlayer');
+            const quickCashout = document.getElementById('quickCashout');
+            const activePlayers = players.filter(p => !p.cashedOut);
+
+            if (activePlayers.length === 0) {
+                quickCashout.style.display = 'none';
+                return;
+            }
+
+            quickCashout.style.display = 'flex';
+            select.innerHTML = '<option value="">Select player...</option>' +
+                activePlayers.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+        }
+
+        function applyQuickCashout() {
+            const select = document.getElementById('quickCashoutPlayer');
+            const playerId = select.value;
+            const total = document.getElementById('chipTotal').textContent;
+            const amount = parseFloat(total.replace('$', ''));
+
+            if (!playerId) {
+                alert('Select a player first.');
+                return;
+            }
+
+            if (isNaN(amount) || amount < 0) {
+                alert('Count some chips first.');
+                return;
+            }
+
+            const player = players.find(p => p.id === playerId);
+            if (player && confirm(`Cash out ${player.name} with ${total}?`)) {
+                player.finalChips = amount;
+                player.cashedOut = true;
+                clearChips();
+                select.value = '';
+                renderPlayers();
+                updateStats();
+                updateQuickCashoutPlayers();
+                saveToLocalStorage();
+            }
         }
 
         function addPlayer(isPrepaid = false) {
@@ -1061,14 +1208,34 @@
             }
         }
 
+        let pendingRemoval = null;
+
         function removePlayer(playerId) {
             const player = players.find(p => p.id === playerId);
-            if (player && confirm(`Remove ${player.name} from the table?`)) {
+            if (!player) return;
+
+            // If already pending removal for this player, execute it
+            if (pendingRemoval === playerId) {
                 players = players.filter(p => p.id !== playerId);
+                pendingRemoval = null;
                 renderPlayers();
                 updateStats();
+                updateQuickCashoutPlayers();
                 saveToLocalStorage();
+                return;
             }
+
+            // Set pending and change button to confirm state
+            pendingRemoval = playerId;
+            renderPlayers();
+
+            // Reset after 3 seconds if not confirmed
+            setTimeout(() => {
+                if (pendingRemoval === playerId) {
+                    pendingRemoval = null;
+                    renderPlayers();
+                }
+            }, 3000);
         }
 
         function getPlayerTotal(player) {
@@ -1106,6 +1273,8 @@
                 endGameBtn.textContent = `End Game & Calculate Payouts (${cashedOutCount}/${players.length} cashed out)`;
             }
 
+            updateQuickCashoutPlayers();
+
             container.innerHTML = players.map(player => {
                 const total = getPlayerTotal(player);
                 const prepaid = player.prepaid || 0;
@@ -1137,11 +1306,16 @@
                         </div>
                     `;
                 } else {
+                    const isRemovePending = pendingRemoval === player.id;
+                    const removeBtn = isRemovePending
+                        ? `<button class="btn-danger-confirm" onclick="removePlayer('${player.id}')">Tap to Confirm</button>`
+                        : `<button class="btn-danger" onclick="removePlayer('${player.id}')">Remove</button>`;
+
                     cashoutSection = `
                         <div class="player-actions">
                             <button class="btn-secondary" onclick="addRebuy('${player.id}')">+$${BUY_IN_AMOUNT} Rebuy</button>
                             <button class="btn-cashout" onclick="addPrepaid('${player.id}')">+$${BUY_IN_AMOUNT} Pre-Paid</button>
-                            <button class="btn-danger" onclick="removePlayer('${player.id}')">Remove</button>
+                            ${removeBtn}
                         </div>
                         <div class="player-actions" style="margin-top: 10px;">
                             <input type="number" id="cashout-${player.id}" class="cashout-input" placeholder="Final chips $" onkeypress="handleCashoutKeyPress(event, '${player.id}')">
@@ -1332,6 +1506,42 @@
                 <h3>Payments</h3>
                 ${paymentsHtml}
             `;
+        }
+
+        function shareSettlement() {
+            const date = new Date().toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+
+            let text = `Wisler Poker Night - ${date}\n`;
+            text += `Pot: $${players.reduce((sum, p) => sum + getPlayerTotal(p), 0).toFixed(2)}\n\n`;
+
+            // Results
+            const results = players
+                .map(p => ({
+                    name: p.name,
+                    profit: getPlayerProfit(p)
+                }))
+                .sort((a, b) => b.profit - a.profit);
+
+            results.forEach(r => {
+                if (r.profit > 0) {
+                    text += `${r.name}: +$${r.profit.toFixed(2)}\n`;
+                } else if (r.profit < 0) {
+                    text += `${r.name}: -$${Math.abs(r.profit).toFixed(2)}\n`;
+                } else {
+                    text += `${r.name}: $0.00\n`;
+                }
+            });
+
+            // Copy to clipboard
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Results copied to clipboard!');
+            }).catch(() => {
+                alert(text);
+            });
         }
 
         function resetGame() {

@@ -1128,22 +1128,30 @@
         function calculateSettlement() {
             const container = document.getElementById('settlementList');
 
+            // Calculate totals for summary
+            let totalOwed = 0;
+            let totalGets = 0;
+            let totalPrepaid = 0;
+
             // Build breakdown for each player
-            const breakdownHtml = players.map(player => {
+            let breakdownHtml = players.map(player => {
                 const buyIn = getPlayerTotal(player);
                 const finalChips = player.finalChips;
                 const profit = getPlayerProfit(player);
                 const prepaid = player.prepaid || 0;
                 const netPosition = profit + prepaid;
+                totalPrepaid += prepaid;
 
                 let netClass = 'even';
                 let netText = 'Square';
                 if (netPosition < -0.01) {
                     netClass = 'owes';
                     netText = `Owes $${Math.abs(netPosition).toFixed(2)}`;
+                    totalOwed += Math.abs(netPosition);
                 } else if (netPosition > 0.01) {
                     netClass = 'owed';
                     netText = `Gets $${netPosition.toFixed(2)}`;
+                    totalGets += netPosition;
                 }
 
                 const prepaidNote = prepaid > 0 ? `, Pre-paid: $${prepaid.toFixed(2)}` : '';
@@ -1157,15 +1165,34 @@
                 `;
             }).join('');
 
+            // Add bank row if there's prepaid money
+            if (totalPrepaid > 0.01) {
+                breakdownHtml += `
+                    <div class="breakdown-item" style="border: 1px solid #c9a227; margin-top: 10px;">
+                        <span class="name">🏦 Bank (You)</span>
+                        <span class="details">Holding pre-paid money to distribute</span>
+                        <span class="net owes">Pays $${totalPrepaid.toFixed(2)}</span>
+                    </div>
+                `;
+            }
+
+            // Add net total row
+            const netBalance = (totalOwed + totalPrepaid - totalGets);
+            breakdownHtml += `
+                <div class="breakdown-item" style="border-top: 2px solid #c9a227; margin-top: 10px; padding-top: 12px;">
+                    <span class="name" style="color: #c9a227;"><strong>Net Balance</strong></span>
+                    <span class="details">Owes: $${totalOwed.toFixed(2)} + Bank: $${totalPrepaid.toFixed(2)} = Gets: $${totalGets.toFixed(2)}</span>
+                    <span class="net ${Math.abs(netBalance) < 0.01 ? 'owed' : 'owes'}">${Math.abs(netBalance) < 0.01 ? '✓ Balanced' : `Off by $${netBalance.toFixed(2)}`}</span>
+                </div>
+            `;
+
             // Calculate who owes and who is owed
             const losers = []; // People who owe money (after accounting for their prepaid)
             const winners = []; // People who are owed money
-            let totalPrepaid = 0;
 
             players.forEach(player => {
                 const profit = getPlayerProfit(player);
                 const prepaid = player.prepaid || 0;
-                totalPrepaid += prepaid;
 
                 // Net position: what this player actually owes/gets after prepaid
                 const netPosition = profit + prepaid;

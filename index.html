@@ -930,12 +930,27 @@
             </div>
         </div>
 
-        <div class="add-player-section">
+        <div class="add-player-section" id="gameSetup">
+            <h2>Game Setup</h2>
+            <div class="input-row">
+                <div style="display: flex; flex-direction: column; gap: 5px; flex: 1;">
+                    <label style="color: #9ca3af; font-size: 12px;">Buy-In Amount</label>
+                    <input type="number" id="setupBuyIn" value="25" min="1" step="5" style="text-align: center;">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 5px; flex: 1;">
+                    <label style="color: #9ca3af; font-size: 12px;">Rebuy Amount</label>
+                    <input type="number" id="setupRebuy" value="25" min="1" step="5" style="text-align: center;">
+                </div>
+                <button class="btn-primary" onclick="startGame()" style="align-self: flex-end;">Start Game</button>
+            </div>
+        </div>
+
+        <div class="add-player-section" id="addPlayerSection" style="display: none;">
             <h2>Add Player</h2>
             <div class="input-row">
                 <input type="text" id="playerName" placeholder="Player Name" onkeypress="handleKeyPress(event)">
-                <button class="btn-primary" onclick="addPlayer(false)">$25 Buy-In</button>
-                <button class="btn-cashout" onclick="addPlayer(true)">$25 Pre-Paid</button>
+                <button class="btn-primary" onclick="addPlayer(false)" id="buyInBtn">$25 Buy-In</button>
+                <button class="btn-cashout" onclick="addPlayer(true)" id="prepaidBtn">$25 Pre-Paid</button>
             </div>
         </div>
 
@@ -1029,12 +1044,13 @@
     <script>
         let players = [];
         let gameHistory = [];
+        let buyInAmount = 25;
+        let rebuyAmount = 25;
+        let gameStarted = false;
 
         function generateId() {
             return Date.now().toString(36) + Math.random().toString(36).substr(2);
         }
-
-        const BUY_IN_AMOUNT = 25;
 
         // Chip values in cents
         const CHIP_VALUES = {
@@ -1073,6 +1089,17 @@
 
         function toggleChipCalculator() {
             document.getElementById('chipCalculator').classList.toggle('collapsed');
+        }
+
+        function startGame() {
+            buyInAmount = parseFloat(document.getElementById('setupBuyIn').value) || 25;
+            rebuyAmount = parseFloat(document.getElementById('setupRebuy').value) || 25;
+            gameStarted = true;
+
+            document.getElementById('gameSetup').style.display = 'none';
+            document.getElementById('addPlayerSection').style.display = 'block';
+            document.getElementById('buyInBtn').textContent = `$${buyInAmount.toFixed(0)} Buy-In`;
+            document.getElementById('prepaidBtn').textContent = `$${buyInAmount.toFixed(0)} Pre-Paid`;
         }
 
         function updateQuickCashoutPlayers() {
@@ -1129,15 +1156,15 @@
             }
 
             const prepaidText = isPrepaid ? ' (pre-paid)' : '';
-            if (!confirm(`Add ${name} with a $${BUY_IN_AMOUNT} buy-in${prepaidText}?`)) {
+            if (!confirm(`Add ${name} with a $${buyInAmount} buy-in${prepaidText}?`)) {
                 return;
             }
 
             players.push({
                 id: generateId(),
                 name: name,
-                buyIns: [BUY_IN_AMOUNT],
-                prepaid: isPrepaid ? BUY_IN_AMOUNT : 0,
+                buyIns: [buyInAmount],
+                prepaid: isPrepaid ? buyInAmount : 0,
                 finalChips: null,
                 cashedOut: false
             });
@@ -1154,11 +1181,11 @@
             const player = players.find(p => p.id === playerId);
             if (!player || player.cashedOut) return;
 
-            if (!confirm(`Add $${BUY_IN_AMOUNT} rebuy for ${player.name}?`)) {
+            if (!confirm(`Add $${rebuyAmount} rebuy for ${player.name}?`)) {
                 return;
             }
 
-            player.buyIns.push(BUY_IN_AMOUNT);
+            player.buyIns.push(rebuyAmount);
             renderPlayers();
             updateStats();
             saveToLocalStorage();
@@ -1168,11 +1195,11 @@
             const player = players.find(p => p.id === playerId);
             if (!player || player.cashedOut) return;
 
-            if (!confirm(`Add $${BUY_IN_AMOUNT} pre-paid for ${player.name}?`)) {
+            if (!confirm(`Add $${buyInAmount} pre-paid for ${player.name}?`)) {
                 return;
             }
 
-            player.prepaid = (player.prepaid || 0) + BUY_IN_AMOUNT;
+            player.prepaid = (player.prepaid || 0) + buyInAmount;
             renderPlayers();
             updateStats();
             saveToLocalStorage();
@@ -1317,8 +1344,8 @@
 
                     cashoutSection = `
                         <div class="player-actions">
-                            <button class="btn-secondary" onclick="addRebuy('${player.id}')">+$${BUY_IN_AMOUNT} Rebuy</button>
-                            <button class="btn-cashout" onclick="addPrepaid('${player.id}')">+$${BUY_IN_AMOUNT} Pre-Paid</button>
+                            <button class="btn-secondary" onclick="addRebuy('${player.id}')">+$${rebuyAmount} Rebuy</button>
+                            <button class="btn-cashout" onclick="addPrepaid('${player.id}')">+$${buyInAmount} Pre-Paid</button>
                             ${removeBtn}
                         </div>
                         <div class="player-actions" style="margin-top: 10px;">
@@ -1551,8 +1578,16 @@
         function resetGame() {
             if (confirm('Start a new game? This will clear all player data.')) {
                 players = [];
+                gameStarted = false;
+                buyInAmount = 25;
+                rebuyAmount = 25;
                 localStorage.removeItem('wislerPokerPlayers');
+                localStorage.removeItem('wislerPokerSettings');
                 document.getElementById('settlementSection').classList.remove('active');
+                document.getElementById('gameSetup').style.display = 'block';
+                document.getElementById('addPlayerSection').style.display = 'none';
+                document.getElementById('setupBuyIn').value = 25;
+                document.getElementById('setupRebuy').value = 25;
                 renderPlayers();
                 updateStats();
             }
@@ -1572,9 +1607,29 @@
 
         function saveToLocalStorage() {
             localStorage.setItem('wislerPokerPlayers', JSON.stringify(players));
+            localStorage.setItem('wislerPokerSettings', JSON.stringify({
+                buyInAmount,
+                rebuyAmount,
+                gameStarted
+            }));
         }
 
         function loadFromLocalStorage() {
+            const savedSettings = localStorage.getItem('wislerPokerSettings');
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+                buyInAmount = settings.buyInAmount || 25;
+                rebuyAmount = settings.rebuyAmount || 25;
+                gameStarted = settings.gameStarted || false;
+
+                if (gameStarted) {
+                    document.getElementById('gameSetup').style.display = 'none';
+                    document.getElementById('addPlayerSection').style.display = 'block';
+                    document.getElementById('buyInBtn').textContent = `$${buyInAmount.toFixed(0)} Buy-In`;
+                    document.getElementById('prepaidBtn').textContent = `$${buyInAmount.toFixed(0)} Pre-Paid`;
+                }
+            }
+
             const saved = localStorage.getItem('wislerPokerPlayers');
             if (saved) {
                 players = JSON.parse(saved);
@@ -1624,8 +1679,16 @@
 
             // Reset current game
             players = [];
+            gameStarted = false;
+            buyInAmount = 25;
+            rebuyAmount = 25;
             localStorage.removeItem('wislerPokerPlayers');
+            localStorage.removeItem('wislerPokerSettings');
             document.getElementById('settlementSection').classList.remove('active');
+            document.getElementById('gameSetup').style.display = 'block';
+            document.getElementById('addPlayerSection').style.display = 'none';
+            document.getElementById('setupBuyIn').value = 25;
+            document.getElementById('setupRebuy').value = 25;
             renderPlayers();
             updateStats();
             renderHistory();

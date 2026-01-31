@@ -12,10 +12,10 @@
         }
 
         body {
-            font-family: 'Georgia', serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1c2420;
             min-height: 100vh;
-            color: #e8e8e8;
+            color: #e8e4dc;
         }
 
         .container {
@@ -27,38 +27,36 @@
         header {
             text-align: center;
             padding: 30px 0;
-            border-bottom: 3px solid #c9a227;
+            border-bottom: 2px solid #3d4a44;
             margin-bottom: 30px;
         }
 
         h1 {
-            font-size: 2.8em;
-            color: #c9a227;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            letter-spacing: 2px;
+            font-size: 2.2em;
+            color: #e8e4dc;
+            font-weight: 600;
+            letter-spacing: 1px;
         }
 
         .tagline {
-            font-style: italic;
-            color: #888;
-            margin-top: 10px;
-            font-size: 1.1em;
+            color: #7a8580;
+            margin-top: 8px;
+            font-size: 0.95em;
         }
 
         .card-suits {
-            font-size: 1.5em;
-            margin-top: 10px;
-            color: #c9a227;
+            font-size: 1.2em;
+            margin-top: 8px;
+            color: #5a6660;
         }
 
         .stats-bar {
             display: flex;
             justify-content: space-around;
-            background: rgba(201, 162, 39, 0.1);
-            border: 2px solid #c9a227;
-            border-radius: 10px;
+            background: #242e29;
+            border-radius: 8px;
             padding: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
         }
 
         .stat {
@@ -66,35 +64,35 @@
         }
 
         .stat-value {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #c9a227;
+            font-size: 2.2em;
+            font-weight: 600;
+            color: #e8e4dc;
         }
 
         .stat-label {
-            font-size: 0.9em;
-            color: #888;
+            font-size: 0.8em;
+            color: #7a8580;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         .add-player-section {
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 30px;
-            border: 1px solid #333;
+            background: #242e29;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
         }
 
         .add-player-section h2 {
-            color: #c9a227;
+            color: #e8e4dc;
             margin-bottom: 15px;
-            font-size: 1.3em;
+            font-size: 1.1em;
+            font-weight: 500;
         }
 
         .input-row {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
@@ -102,161 +100,152 @@
             flex: 1;
             min-width: 150px;
             padding: 12px 15px;
-            border: 2px solid #444;
-            border-radius: 8px;
-            background: #1a1a2e;
-            color: #e8e8e8;
+            border: 1px solid #3d4a44;
+            border-radius: 6px;
+            background: #1c2420;
+            color: #e8e4dc;
             font-size: 1em;
             font-family: inherit;
         }
 
         input:focus {
             outline: none;
-            border-color: #c9a227;
+            border-color: #5a6660;
         }
 
         input::placeholder {
-            color: #666;
+            color: #5a6660;
         }
 
         button {
-            padding: 12px 25px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: bold;
+            border-radius: 6px;
+            font-size: 0.95em;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             font-family: inherit;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #c9a227, #a88620);
-            color: #1a1a2e;
+            background: #3d4a44;
+            color: #e8e4dc;
         }
 
         .btn-primary:hover {
-            background: linear-gradient(135deg, #d4b23a, #c9a227);
-            transform: translateY(-2px);
+            background: #4d5a54;
         }
 
         .btn-secondary {
-            background: #2a2a4a;
-            color: #c9a227;
-            border: 1px solid #c9a227;
+            background: transparent;
+            color: #7a8580;
+            border: 1px solid #3d4a44;
             padding: 8px 15px;
             font-size: 0.9em;
         }
 
         .btn-secondary:hover {
-            background: #3a3a5a;
+            background: #2a3530;
+            color: #e8e4dc;
         }
 
         .btn-danger {
-            background: #8b0000;
-            color: #fff;
+            background: #4a2c2c;
+            color: #c97c7c;
             padding: 8px 15px;
             font-size: 0.9em;
         }
 
         .btn-danger:hover {
-            background: #a50000;
+            background: #5a3535;
         }
 
         .players-section h2 {
-            color: #c9a227;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            color: #e8e4dc;
+            margin-bottom: 16px;
+            font-size: 1.1em;
+            font-weight: 500;
         }
 
         .player-card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid #333;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
+            background: #242e29;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
         }
 
         .player-card:hover {
-            border-color: #c9a227;
-            background: rgba(255,255,255,0.08);
+            background: #2a3530;
         }
 
         .player-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .player-name {
-            font-size: 1.4em;
-            font-weight: bold;
-            color: #e8e8e8;
+            font-size: 1.2em;
+            font-weight: 500;
+            color: #e8e4dc;
         }
 
         .player-total {
-            font-size: 1.8em;
-            color: #c9a227;
-            font-weight: bold;
+            font-size: 1.4em;
+            color: #7a8580;
+            font-weight: 500;
         }
 
         .buy-ins-list {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .buy-in-chip {
-            background: #2a2a4a;
-            border: 1px solid #444;
-            border-radius: 20px;
-            padding: 5px 12px;
-            font-size: 0.9em;
-            color: #c9a227;
+            background: #1c2420;
+            border-radius: 4px;
+            padding: 4px 10px;
+            font-size: 0.85em;
+            color: #7a8580;
         }
 
         .buy-in-chip.prepaid {
-            background: #1e3d1a;
-            border-color: #4a7c44;
-            color: #90EE90;
+            background: #1e3025;
+            color: #7cb97c;
         }
 
         .player-actions {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
         .no-players {
             text-align: center;
-            padding: 50px;
-            color: #666;
-            font-style: italic;
-            font-size: 1.2em;
+            padding: 40px;
+            color: #5a6660;
         }
 
         .no-players .icon {
-            font-size: 3em;
-            margin-bottom: 15px;
+            font-size: 2.5em;
+            margin-bottom: 12px;
         }
 
         footer {
             text-align: center;
-            padding: 30px;
-            color: #555;
-            border-top: 1px solid #333;
-            margin-top: 50px;
+            padding: 24px;
+            color: #5a6660;
+            border-top: 1px solid #3d4a44;
+            margin-top: 40px;
+            font-size: 0.9em;
         }
 
         footer .quote {
-            font-style: italic;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .cashout-input {
@@ -264,50 +253,47 @@
         }
 
         .btn-cashout {
-            background: linear-gradient(135deg, #2d5a27, #1e3d1a);
-            color: #90EE90;
-            border: 1px solid #4a7c44;
+            background: #1e3025;
+            color: #7cb97c;
             padding: 8px 15px;
             font-size: 0.9em;
         }
 
         .btn-cashout:hover {
-            background: linear-gradient(135deg, #3d6a37, #2d5a27);
+            background: #2a4030;
         }
 
         .cashed-out {
-            border-color: #4a7c44 !important;
-            background: rgba(45, 90, 39, 0.2) !important;
+            background: #1e2825 !important;
         }
 
         .cashout-result {
             margin-top: 10px;
             padding: 10px;
-            border-radius: 8px;
-            font-weight: bold;
+            border-radius: 6px;
+            font-weight: 500;
         }
 
         .cashout-winner {
-            background: rgba(45, 90, 39, 0.3);
-            color: #90EE90;
+            background: #1e3025;
+            color: #7cb97c;
         }
 
         .cashout-loser {
-            background: rgba(139, 0, 0, 0.3);
-            color: #ff6b6b;
+            background: #3a2525;
+            color: #c97c7c;
         }
 
         .cashout-even {
-            background: rgba(100, 100, 100, 0.3);
-            color: #aaa;
+            background: #2a2e2c;
+            color: #7a8580;
         }
 
         .settlement-section {
-            background: rgba(201, 162, 39, 0.1);
-            border: 2px solid #c9a227;
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 30px;
+            background: #242e29;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
             display: none;
         }
 
@@ -316,92 +302,91 @@
         }
 
         .settlement-section h2 {
-            color: #c9a227;
-            margin-bottom: 20px;
-            font-size: 1.5em;
+            color: #e8e4dc;
+            margin-bottom: 16px;
+            font-size: 1.1em;
+            font-weight: 500;
         }
 
         .settlement-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 15px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 8px;
-            margin-bottom: 10px;
+            padding: 12px;
+            background: #1c2420;
+            border-radius: 6px;
+            margin-bottom: 8px;
         }
 
         .settlement-item .payer {
-            color: #ff6b6b;
-            font-weight: bold;
+            color: #c97c7c;
+            font-weight: 500;
         }
 
         .settlement-item .payee {
-            color: #90EE90;
-            font-weight: bold;
+            color: #7cb97c;
+            font-weight: 500;
         }
 
         .settlement-item .amount {
-            color: #c9a227;
-            font-weight: bold;
-            font-size: 1.2em;
+            color: #e8e4dc;
+            font-weight: 600;
+            font-size: 1.1em;
         }
 
         .settlement-arrow {
-            color: #888;
-            margin: 0 10px;
+            color: #5a6660;
+            margin: 0 8px;
         }
 
         .btn-end-game {
-            background: linear-gradient(135deg, #8b0000, #5a0000);
-            color: #fff;
+            background: #4a2c2c;
+            color: #e8e4dc;
             width: 100%;
-            margin-top: 20px;
+            margin-top: 16px;
         }
 
         .btn-end-game:hover {
-            background: linear-gradient(135deg, #a50000, #8b0000);
+            background: #5a3535;
         }
 
         .btn-reset {
-            background: #333;
-            color: #888;
-            border: 1px solid #555;
+            background: #2a3530;
+            color: #7a8580;
             margin-top: 10px;
         }
 
         .btn-reset:hover {
-            background: #444;
-            color: #aaa;
+            background: #3a4540;
+            color: #e8e4dc;
         }
 
         .all-cashed-message {
             text-align: center;
-            color: #90EE90;
-            font-size: 1.1em;
+            color: #7cb97c;
             padding: 15px;
         }
 
         /* Chip Calculator Styles */
         .chip-calculator {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid #333;
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 30px;
+            background: #242e29;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
         }
 
         .chip-calculator h2 {
-            color: #c9a227;
-            margin-bottom: 20px;
-            font-size: 1.3em;
+            color: #e8e4dc;
+            margin-bottom: 16px;
+            font-size: 1.1em;
+            font-weight: 500;
         }
 
         .chip-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .chip-item {
@@ -412,45 +397,44 @@
         }
 
         .chip-circle {
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            font-size: 0.75em;
-            border: 3px dashed rgba(0,0,0,0.3);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            font-weight: 600;
+            font-size: 0.7em;
+            border: 3px dashed rgba(0,0,0,0.2);
         }
 
         .chip-white {
-            background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+            background: #e8e4dc;
             color: #333;
         }
 
         .chip-red {
-            background: linear-gradient(135deg, #e53935, #b71c1c);
+            background: #c44;
             color: #fff;
         }
 
         .chip-blue {
-            background: linear-gradient(135deg, #1e88e5, #0d47a1);
+            background: #3677b5;
             color: #fff;
         }
 
         .chip-green {
-            background: linear-gradient(135deg, #43a047, #1b5e20);
+            background: #3a7a4a;
             color: #fff;
         }
 
         .chip-black {
-            background: linear-gradient(135deg, #424242, #212121);
+            background: #333;
             color: #fff;
         }
 
         .chip-item input {
-            width: 60px;
+            width: 56px;
             text-align: center;
             padding: 8px;
             min-width: unset;
@@ -459,34 +443,32 @@
 
         .chip-item .chip-value {
             font-size: 0.75em;
-            color: #888;
+            color: #5a6660;
         }
 
         .calc-total {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            background: rgba(201, 162, 39, 0.1);
-            border: 2px solid #c9a227;
-            border-radius: 8px;
+            padding: 12px 16px;
+            background: #1c2420;
+            border-radius: 6px;
         }
 
         .calc-total-label {
-            font-size: 1.1em;
-            color: #888;
+            color: #7a8580;
         }
 
         .calc-total-value {
-            font-size: 2em;
-            font-weight: bold;
-            color: #c9a227;
+            font-size: 1.8em;
+            font-weight: 600;
+            color: #e8e4dc;
         }
 
         .calc-actions {
             display: flex;
             gap: 10px;
-            margin-top: 15px;
+            margin-top: 12px;
         }
 
         .calc-actions button {
@@ -494,90 +476,97 @@
         }
 
         .settlement-breakdown {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .settlement-breakdown h3 {
-            color: #c9a227;
+            color: #7a8580;
             margin-bottom: 10px;
-            font-size: 1.1em;
+            font-size: 0.9em;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .breakdown-item {
             display: flex;
             justify-content: space-between;
             padding: 8px 12px;
-            background: rgba(0,0,0,0.2);
+            background: #1c2420;
             border-radius: 6px;
             margin-bottom: 6px;
             font-size: 0.9em;
         }
 
         .breakdown-item .name {
-            color: #e8e8e8;
+            color: #e8e4dc;
         }
 
         .breakdown-item .details {
-            color: #888;
+            color: #5a6660;
         }
 
         .breakdown-item .net {
-            font-weight: bold;
+            font-weight: 500;
         }
 
         .breakdown-item .net.owes {
-            color: #ff6b6b;
+            color: #c97c7c;
         }
 
         .breakdown-item .net.owed {
-            color: #90EE90;
+            color: #7cb97c;
         }
 
         .breakdown-item .net.even {
-            color: #888;
+            color: #7a8580;
         }
 
         .settlement-divider {
-            border-top: 1px solid #444;
-            margin: 20px 0;
+            border-top: 1px solid #3d4a44;
+            margin: 16px 0;
         }
 
         .settlement-section h3 {
-            color: #c9a227;
-            margin-bottom: 15px;
-            font-size: 1.1em;
+            color: #7a8580;
+            margin-bottom: 12px;
+            font-size: 0.9em;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         /* History Section */
         .history-section {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid #333;
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 30px;
+            background: #242e29;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
         }
 
         .history-section h2 {
-            color: #c9a227;
-            margin-bottom: 20px;
-            font-size: 1.3em;
+            color: #e8e4dc;
+            margin-bottom: 16px;
+            font-size: 1.1em;
+            font-weight: 500;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .history-toggle {
-            background: #2a2a4a;
-            color: #c9a227;
-            border: 1px solid #c9a227;
-            padding: 8px 15px;
+            background: transparent;
+            color: #7a8580;
+            border: 1px solid #3d4a44;
+            padding: 6px 12px;
             font-size: 0.8em;
-            border-radius: 6px;
+            border-radius: 4px;
             cursor: pointer;
         }
 
         .history-toggle:hover {
-            background: #3a3a5a;
+            background: #2a3530;
+            color: #e8e4dc;
         }
 
         .history-list {
@@ -589,11 +578,10 @@
         }
 
         .history-game {
-            background: rgba(0,0,0,0.2);
-            border: 1px solid #444;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
+            background: #1c2420;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
         }
 
         .history-game-header {
@@ -602,56 +590,70 @@
             align-items: center;
             margin-bottom: 10px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #444;
+            border-bottom: 1px solid #3d4a44;
         }
 
         .history-game-date {
-            color: #c9a227;
-            font-weight: bold;
+            color: #e8e4dc;
+            font-weight: 500;
         }
 
         .history-game-players {
-            color: #888;
-            font-size: 0.9em;
-        }
-
-        .history-game-summary {
+            color: #5a6660;
             font-size: 0.85em;
-            color: #aaa;
         }
 
-        .history-game-summary .winner {
-            color: #90EE90;
+        .history-results {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
-        .history-game-summary .loser {
-            color: #ff6b6b;
+        .history-player {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .history-player.winner {
+            background: #1e3025;
+            color: #7cb97c;
+        }
+
+        .history-player.loser {
+            background: #3a2525;
+            color: #c97c7c;
+        }
+
+        .history-player.even {
+            color: #5a6660;
         }
 
         .no-history {
             text-align: center;
-            color: #666;
-            font-style: italic;
+            color: #5a6660;
             padding: 20px;
         }
 
         .btn-clear-history {
-            background: #333;
-            color: #888;
-            border: 1px solid #555;
+            background: transparent;
+            color: #5a6660;
+            border: 1px solid #3d4a44;
             font-size: 0.8em;
             padding: 6px 12px;
         }
 
         .btn-clear-history:hover {
-            background: #8b0000;
-            color: #fff;
-            border-color: #8b0000;
+            background: #4a2c2c;
+            color: #c97c7c;
+            border-color: #4a2c2c;
         }
 
         @media (max-width: 600px) {
             .container {
-                padding: 15px;
+                padding: 12px;
             }
 
             header {
@@ -659,30 +661,24 @@
             }
 
             h1 {
-                font-size: 1.8em;
-                letter-spacing: 1px;
+                font-size: 1.6em;
             }
 
             .tagline {
-                font-size: 0.95em;
+                font-size: 0.9em;
             }
 
             .stats-bar {
-                flex-direction: column;
-                gap: 15px;
-                padding: 15px;
+                gap: 20px;
+                padding: 16px;
             }
 
             .stat-value {
-                font-size: 2em;
-            }
-
-            .stat-label {
-                font-size: 0.8em;
+                font-size: 1.8em;
             }
 
             .add-player-section {
-                padding: 20px 15px;
+                padding: 16px;
             }
 
             .input-row {
@@ -691,66 +687,41 @@
 
             input {
                 min-width: 100%;
-                padding: 15px;
-                font-size: 16px; /* Prevents zoom on iOS */
+                padding: 14px;
+                font-size: 16px;
             }
 
             button {
-                padding: 15px 25px;
+                padding: 14px 20px;
                 width: 100%;
             }
 
             .player-card {
-                padding: 15px;
+                padding: 14px;
             }
 
             .player-header {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 5px;
+                gap: 4px;
             }
 
             .player-name {
-                font-size: 1.2em;
+                font-size: 1.1em;
             }
 
             .player-total {
-                font-size: 1.5em;
-            }
-
-            .buy-in-chip {
-                font-size: 0.85em;
-                padding: 4px 10px;
-            }
-
-            .player-actions {
-                flex-direction: column;
-            }
-
-            .player-actions input {
-                width: 100%;
-            }
-
-            .btn-secondary,
-            .btn-danger {
-                flex: 1;
-                padding: 12px 15px;
-                text-align: center;
+                font-size: 1.2em;
             }
 
             .player-actions {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
-                gap: 10px;
+                gap: 8px;
             }
 
             .player-actions input {
                 grid-column: 1 / -1;
-            }
-
-            .no-players {
-                padding: 30px 15px;
-                font-size: 1em;
             }
 
             .cashout-input {
@@ -759,22 +730,18 @@
 
             .btn-cashout {
                 width: 100%;
-                padding: 12px 15px;
-            }
-
-            .cashout-result {
-                font-size: 0.95em;
+                padding: 12px;
             }
 
             .settlement-section {
-                padding: 20px 15px;
+                padding: 16px;
             }
 
             .settlement-item {
                 flex-wrap: wrap;
                 justify-content: center;
                 text-align: center;
-                gap: 5px;
+                gap: 4px;
             }
 
             .settlement-item .payer,
@@ -783,42 +750,34 @@
             }
 
             .settlement-item .amount {
-                font-size: 1.4em;
-                margin: 5px 0;
+                font-size: 1.2em;
+                margin: 4px 0;
             }
 
             .settlement-arrow {
                 display: none;
             }
 
-            .settlement-item::before {
-                content: '';
-                display: block;
-                width: 100%;
-            }
-
             footer {
-                padding: 20px 15px;
-                margin-top: 30px;
+                padding: 20px 12px;
             }
 
             .chip-calculator {
-                padding: 20px 15px;
+                padding: 16px;
             }
 
             .chip-grid {
-                grid-template-columns: repeat(5, 1fr);
-                gap: 8px;
+                gap: 6px;
             }
 
             .chip-circle {
                 width: 40px;
                 height: 40px;
-                font-size: 0.65em;
+                font-size: 0.6em;
             }
 
             .chip-item input {
-                width: 50px;
+                width: 48px;
                 padding: 6px;
                 font-size: 14px;
             }
@@ -828,7 +787,7 @@
             }
 
             .calc-total-value {
-                font-size: 1.6em;
+                font-size: 1.5em;
             }
 
             .calc-actions {
@@ -836,18 +795,16 @@
             }
         }
 
-        /* Extra small devices */
         @media (max-width: 360px) {
             h1 {
-                font-size: 1.5em;
+                font-size: 1.4em;
             }
 
             .stat-value {
-                font-size: 1.6em;
+                font-size: 1.5em;
             }
         }
 
-        /* Touch-friendly improvements */
         @media (hover: none) and (pointer: coarse) {
             button {
                 min-height: 48px;
@@ -856,16 +813,6 @@
             input {
                 min-height: 48px;
             }
-
-            .player-card:hover {
-                border-color: #333;
-                background: rgba(255,255,255,0.05);
-            }
-
-            .player-card:active {
-                border-color: #c9a227;
-                background: rgba(255,255,255,0.08);
-            }
         }
     </style>
 </head>
@@ -873,27 +820,23 @@
     <div class="container">
         <header>
             <h1>WISLER TAKES ALL</h1>
-            <p class="tagline">"Where legends are made and wallets are emptied"</p>
+            <p class="tagline">Poker night tracker</p>
             <div class="card-suits">♠ ♥ ♣ ♦</div>
         </header>
 
         <div class="stats-bar">
             <div class="stat">
                 <div class="stat-value" id="totalPot">$0</div>
-                <div class="stat-label">The Wisler Pot</div>
+                <div class="stat-label">The Pot</div>
             </div>
             <div class="stat">
                 <div class="stat-value" id="playerCount">0</div>
-                <div class="stat-label">At The Table</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value" id="avgBuyIn">$0</div>
-                <div class="stat-label">Avg Per Player</div>
+                <div class="stat-label">Players</div>
             </div>
         </div>
 
         <div class="add-player-section">
-            <h2>♠ Seat a New Player</h2>
+            <h2>Add Player</h2>
             <div class="input-row">
                 <input type="text" id="playerName" placeholder="Player Name" onkeypress="handleKeyPress(event)">
                 <button class="btn-primary" onclick="addPlayer(false)">$25 Buy-In</button>
@@ -902,7 +845,7 @@
         </div>
 
         <div class="chip-calculator">
-            <h2>♦ Chip Counter</h2>
+            <h2>Chip Counter</h2>
             <div class="chip-grid">
                 <div class="chip-item">
                     <div class="chip-circle chip-white">10¢</div>
@@ -941,7 +884,7 @@
         </div>
 
         <div class="players-section">
-            <h2>♣ The Wisler's Den</h2>
+            <h2>Players</h2>
             <div id="playersList">
                 <div class="no-players">
                     <div class="icon">🎰</div>
@@ -954,14 +897,14 @@
         </div>
 
         <div class="settlement-section" id="settlementSection">
-            <h2>♠ The Wisler Settlement</h2>
+            <h2>Settlement</h2>
             <div id="settlementList"></div>
             <button class="btn-primary btn-reset" onclick="saveAndStartNewGame()">Save & Start New Game</button>
         </div>
 
         <div class="history-section">
             <h2>
-                📜 Game History
+                Game History
                 <button class="history-toggle" onclick="toggleHistory()">Show/Hide</button>
             </h2>
             <div class="history-list" id="historyList">
@@ -970,8 +913,7 @@
         </div>
 
         <footer>
-            <p class="quote">"In Wisler's house, the chips fall where they may."</p>
-            <p>The Wisler Poker Night Tracker</p>
+            <p>Wisler Poker Night</p>
         </footer>
     </div>
 
@@ -1135,8 +1077,7 @@
             if (players.length === 0) {
                 container.innerHTML = `
                     <div class="no-players">
-                        <div class="icon">🎰</div>
-                        <p>No players yet. Who's got the guts to sit at Wisler's table?</p>
+                        <p>No players yet</p>
                     </div>
                 `;
                 endGameBtn.style.display = 'none';
@@ -1202,7 +1143,7 @@
                 return `
                     <div class="player-card ${player.cashedOut ? 'cashed-out' : ''}">
                         <div class="player-header">
-                            <span class="player-name">♦ ${player.name}</span>
+                            <span class="player-name">${player.name}</span>
                             <span class="player-total">$${total.toFixed(2)} in</span>
                         </div>
                         <div class="buy-ins-list">
@@ -1216,12 +1157,8 @@
 
         function updateStats() {
             const totalPot = players.reduce((sum, player) => sum + getPlayerTotal(player), 0);
-            const playerCount = players.length;
-            const avgBuyIn = playerCount > 0 ? totalPot / playerCount : 0;
-
             document.getElementById('totalPot').textContent = `$${totalPot.toFixed(2)}`;
-            document.getElementById('playerCount').textContent = playerCount;
-            document.getElementById('avgBuyIn').textContent = `$${avgBuyIn.toFixed(2)}`;
+            document.getElementById('playerCount').textContent = players.length;
         }
 
         function showSettlement() {
@@ -1280,9 +1217,9 @@
             // Add bank row if there's prepaid money
             if (totalPrepaid > 0.01) {
                 breakdownHtml += `
-                    <div class="breakdown-item" style="border: 1px solid #c9a227; margin-top: 10px;">
-                        <span class="name">🏦 Bank (You)</span>
-                        <span class="details">Holding pre-paid money to distribute</span>
+                    <div class="breakdown-item" style="border: 1px solid #3d4a44; margin-top: 10px;">
+                        <span class="name">Bank (You)</span>
+                        <span class="details">Holding pre-paid money</span>
                         <span class="net owes">Pays $${totalPrepaid.toFixed(2)}</span>
                     </div>
                 `;
@@ -1291,10 +1228,10 @@
             // Add net total row
             const netBalance = (totalOwed + totalPrepaid - totalGets);
             breakdownHtml += `
-                <div class="breakdown-item" style="border-top: 2px solid #c9a227; margin-top: 10px; padding-top: 12px;">
-                    <span class="name" style="color: #c9a227;"><strong>Net Balance</strong></span>
+                <div class="breakdown-item" style="border-top: 1px solid #3d4a44; margin-top: 10px; padding-top: 12px;">
+                    <span class="name"><strong>Net Balance</strong></span>
                     <span class="details">Owes: $${totalOwed.toFixed(2)} + Bank: $${totalPrepaid.toFixed(2)} = Gets: $${totalGets.toFixed(2)}</span>
-                    <span class="net ${Math.abs(netBalance) < 0.01 ? 'owed' : 'owes'}">${Math.abs(netBalance) < 0.01 ? '✓ Balanced' : `Off by $${netBalance.toFixed(2)}`}</span>
+                    <span class="net ${Math.abs(netBalance) < 0.01 ? 'owed' : 'owes'}">${Math.abs(netBalance) < 0.01 ? 'Balanced' : `Off by $${netBalance.toFixed(2)}`}</span>
                 </div>
             `;
 
@@ -1319,7 +1256,7 @@
             // Add the bank (host) as a payer for prepaid amounts
             // This represents the prepaid money you're holding that needs to go to winners
             if (totalPrepaid > 0.01) {
-                losers.push({ name: '🏦 Bank (Pre-Paid)', amount: totalPrepaid });
+                losers.push({ name: 'Bank (Pre-Paid)', amount: totalPrepaid });
             }
 
             // Sort by amount (highest first)
@@ -1495,7 +1432,7 @@
                     minute: '2-digit'
                 });
 
-                // Find winner(s) and loser(s)
+                // Get all player results
                 const results = game.players
                     .filter(p => p.cashedOut)
                     .map(p => {
@@ -1504,18 +1441,19 @@
                     })
                     .sort((a, b) => b.profit - a.profit);
 
-                let summaryHtml = '';
+                let resultsHtml = '';
                 if (results.length > 0) {
-                    const winner = results[0];
-                    const loser = results[results.length - 1];
-                    if (winner.profit > 0) {
-                        summaryHtml += `<span class="winner">${winner.name} +$${winner.profit.toFixed(2)}</span>`;
-                    }
-                    if (loser.profit < 0 && loser !== winner) {
-                        summaryHtml += ` | <span class="loser">${loser.name} $${loser.profit.toFixed(2)}</span>`;
-                    }
+                    resultsHtml = results.map(r => {
+                        if (r.profit > 0) {
+                            return `<div class="history-player winner">${r.name} <span>+$${r.profit.toFixed(2)}</span></div>`;
+                        } else if (r.profit < 0) {
+                            return `<div class="history-player loser">${r.name} <span>-$${Math.abs(r.profit).toFixed(2)}</span></div>`;
+                        } else {
+                            return `<div class="history-player even">${r.name} <span>$0.00</span></div>`;
+                        }
+                    }).join('');
                 } else {
-                    summaryHtml = '<em>Incomplete game</em>';
+                    resultsHtml = '<div class="history-player"><em>Incomplete game</em></div>';
                 }
 
                 return `
@@ -1524,7 +1462,7 @@
                             <span class="history-game-date">${dateStr}</span>
                             <span class="history-game-players">${game.players.length} players | $${game.totalPot.toFixed(2)} pot</span>
                         </div>
-                        <div class="history-game-summary">${summaryHtml}</div>
+                        <div class="history-results">${resultsHtml}</div>
                     </div>
                 `;
             }).join('') + `

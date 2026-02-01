@@ -1225,11 +1225,22 @@
             const player = players.find(p => p.id === playerId);
             if (!player || player.cashedOut) return;
 
-            if (!confirm(`Add $${buyInAmount} pre-paid for ${player.name}?`)) {
+            const totalOwed = getPlayerTotal(player);
+            const alreadyPrepaid = player.prepaid || 0;
+            const remainingOwed = totalOwed - alreadyPrepaid;
+
+            const defaultAmount = remainingOwed > 0 ? remainingOwed : buyInAmount;
+            const input = prompt(`Enter pre-paid amount for ${player.name}:\n(Total owed: $${totalOwed.toFixed(2)}, Already pre-paid: $${alreadyPrepaid.toFixed(2)})`, defaultAmount.toFixed(2));
+
+            if (input === null) return;
+
+            const amount = parseFloat(input);
+            if (isNaN(amount) || amount <= 0) {
+                alert('Please enter a valid amount greater than 0.');
                 return;
             }
 
-            player.prepaid = (player.prepaid || 0) + buyInAmount;
+            player.prepaid = alreadyPrepaid + amount;
             renderPlayers();
             updateStats();
             saveToLocalStorage();
@@ -1374,10 +1385,13 @@
                         ? `<button class="btn-danger-confirm" onclick="removePlayer('${player.id}')">Tap to Confirm</button>`
                         : `<button class="btn-danger" onclick="removePlayer('${player.id}')">Remove</button>`;
 
+                    const remainingOwed = total - prepaid;
+                    const prepayBtnText = remainingOwed > 0 ? `Pre-Pay ($${remainingOwed.toFixed(0)} owed)` : 'Pre-Pay';
+
                     cashoutSection = `
                         <div class="player-actions">
                             <button class="btn-secondary" onclick="addRebuy('${player.id}')">+$${rebuyAmount} Rebuy</button>
-                            <button class="btn-cashout" onclick="addPrepaid('${player.id}')">+$${buyInAmount} Pre-Paid</button>
+                            <button class="btn-cashout" onclick="addPrepaid('${player.id}')">${prepayBtnText}</button>
                             ${removeBtn}
                         </div>
                         <div class="player-actions" style="margin-top: 10px;">
